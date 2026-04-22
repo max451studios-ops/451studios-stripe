@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>451 Studios | AI Systems for Home Service Businesses</title>
+  <link rel="icon" href="../branding/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../branding/favicon-32x32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="../branding/favicon-16x16.png" type="image/png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="../branding/favicon-64x64.png" />
+  <style>
+    :root {
+      --bg: #081018;
+      --surface: #101926;
+      --surface-2: #152132;
+      --border: #223147;
+      --text: #edf3ff;
+      --muted: #9fb0cb;
+      --accent: #70a7ff;
+      --accent-2: #8b7dff;
+      --green: #58d68d;
+      --shadow: 0 14px 40px rgba(0,0,0,.28);
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top left, rgba(112,167,255,.14), transparent 26%), linear-gradient(180deg, #081018 0%, #0c1420 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(100% - 32px, var(--max)); margin: 0 auto; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(8,16,24,.78);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      gap: 12px;
+    }
+
+    .brand { font-weight: 800; letter-spacing: .05em; font-size: 1.05rem; }
+    .brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      transition: .18s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: white;
+      box-shadow: 0 10px 24px rgba(112,167,255,.22);
+    }
+
+    .hero {
+      padding: 84px 0 48px;
+      display: grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(88,214,141,.1);
+      color: #c6f5d7;
+      border: 1px solid rgba(88,214,141,.18);
+      font-size: .82rem;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      line-height: 1.02;
+      margin-bottom: 18px;
+      letter-spacing: -.03em;
+      max-width: 820px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: .92rem; }
+    .meta span { padding: 9px 12px; border-radius: 999px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); }
+
+    .hero-card, .card {
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card h3, .card h3 { font-size: 1.1rem; margin-bottom: 12px; }
+    .mini-list { display: grid; gap: 12px; }
+    .mini-item { padding: 14px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); }
+    .mini-item strong { display: block; margin-bottom: 4px; }
+    .mini-item span, .card p, .card li { color: var(--muted); font-size: .94rem; }
+
+    section { padding: 28px 0; }
+    .section-head { margin-bottom: 18px; }
+    .section-head h2 { font-size: 1.8rem; margin-bottom: 8px; }
+    .section-head p { color: var(--muted); max-width: 760px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .card ul { padding-left: 18px; display: grid; gap: 8px; }
+
+    .offer { border: 1px solid rgba(112,167,255,.24); background: linear-gradient(180deg, rgba(112,167,255,.09), rgba(16,25,38,.98)); }
+    .price { font-size: 2rem; font-weight: 800; margin: 10px 0 4px; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: .75rem; color: #dce8ff; background: rgba(112,167,255,.12); border: 1px solid rgba(112,167,255,.18); margin-bottom: 10px; }
+
+    .steps { display: grid; gap: 14px; }
+    .step { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; padding: 16px; border-radius: 16px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); }
+    .step-num { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-weight: 800; }
+
+    .cta { margin: 28px 0 56px; padding: 28px; border-radius: 24px; background: linear-gradient(135deg, rgba(112,167,255,.16), rgba(139,125,255,.12)); border: 1px solid rgba(112,167,255,.18); box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+
+    footer { padding: 28px 0 48px; color: var(--muted); text-align: center; font-size: .9rem; }
+
+    @media (max-width: 980px) {
+      .hero, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <img src="../branding/451studios-logo.png" alt="451 Studios Logo" style="height: 42px; width: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));" />
+      <nav class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#offer">Offer</a>
+        <a href="#process">Process</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="button" href="#contact">Get a quick audit</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">🏠 AI systems for home service businesses</div>
+        <h1>Stop losing good leads because no one followed up fast enough.</h1>
+        <p>
+          451 Studios helps home service businesses tighten the parts of the business that usually slip through the cracks,
+          like missed-call response, web lead follow-up, estimate follow-up, appointment reminders, and review requests.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#contact">Get a quick audit</a>
+          <a class="button" href="#offer">See the starter offer</a>
+        </div>
+        <div class="meta">
+          <span>Built for HVAC, plumbing, roofing, electrical, and more</span>
+          <span>Fast implementation</span>
+          <span>One workflow at a time</span>
+        </div>
+      </div>
+
+      <aside class="hero-card">
+        <h3>Starter Automation Sprint</h3>
+        <div class="mini-list">
+          <div class="mini-item">
+            <strong>Fix one problem first</strong>
+            <span>We start with the workflow that is costing the most time, leads, or follow-up.</span>
+          </div>
+          <div class="mini-item">
+            <strong>Best first wins</strong>
+            <span>Missed-call text back, lead follow-up, estimate follow-up, reminders, and review requests.</span>
+          </div>
+          <div class="mini-item">
+            <strong>Easy to start</strong>
+            <span>Simple scope, fast proof of value, and a clear path into monthly support if it works.</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="services">
+      <div class="section-head">
+        <h2>What we help home service companies automate</h2>
+        <p>We build simple systems that help you respond faster, follow up more consistently, and spend less time doing repetitive admin by hand.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <h3>Missed call follow-up</h3>
+          <p>When a call gets missed, the system can text back right away, collect basic info, and keep the lead from going cold.</p>
+        </article>
+        <article class="card">
+          <h3>Website lead response</h3>
+          <p>New web inquiries get a fast response and move into a cleaner intake flow instead of sitting untouched.</p>
+        </article>
+        <article class="card">
+          <h3>Estimate and reminder flows</h3>
+          <p>Stay in front of prospects and customers without relying on someone to remember every follow-up manually.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="offer">
+      <div class="section-head">
+        <h2>First offer: Starter Automation Sprint</h2>
+        <p>A focused build designed to solve one real problem fast without turning into a giant project.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card offer">
+          <div class="pill">Best launch offer</div>
+          <h3>Starter Automation Sprint</h3>
+          <div class="price">$500 to $750</div>
+          <p>Pilot pricing for the first workflow. If it works, we either expand into the next bottleneck or support it monthly.</p>
+          <ul>
+            <li>Workflow discovery and mapping</li>
+            <li>One automation built around a real bottleneck</li>
+            <li>Testing and refinement</li>
+            <li>Simple SOP / handoff notes</li>
+            <li>Optional ongoing support after launch</li>
+          </ul>
+          
+          <!-- Stripe Checkout Buttons -->
+          <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 12px;">
+            <button 
+              class="button primary" 
+              onclick="startStripeCheckout('price_500')"
+              style="width: 100%; justify-content: center;"
+            >
+              Start with $500 Pilot
+            </button>
+            <button 
+              class="button" 
+              onclick="startStripeCheckout('price_750')"
+              style="width: 100%; justify-content: center;"
+            >
+              Start with $750 Pilot
+            </button>
+          </div>
+          
+          <p style="margin-top: 15px; font-size: 0.85rem; color: var(--muted); text-align: center;">
+            Secure checkout powered by Stripe
+          </p>
+        </article>
+        <article class="card">
+          <h3>Good first use cases</h3>
+          <ul>
+            <li>Missed-call text back + intake</li>
+            <li>Web form lead response + follow-up</li>
+            <li>Estimate follow-up sequence</li>
+            <li>Appointment reminder workflow</li>
+            <li>Review request automation</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="section-head">
+        <h2>How it works</h2>
+        <p>Simple, practical, and built for owners who want results, not another complicated software mess.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <h3>We identify the bottleneck</h3>
+            <p>We find the gap that is costing you the most time, the most leads, or the most follow-up headaches.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <h3>We build the workflow</h3>
+            <p>We map it, build it, test it, and tighten it until it actually works in the real business.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <h3>We prove value and expand</h3>
+            <p>Once the first system proves itself, we either support it monthly or move to the next bottleneck.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Why this works</h2>
+        <p>Most home service businesses do not need more software. They need fewer dropped balls, faster follow-up, and cleaner execution.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <h3>Faster response</h3>
+          <p>More leads get a response before they move on to the next company.</p>
+        </article>
+        <article class="card">
+          <h3>Less admin drag</h3>
+          <p>Owners and staff spend less time chasing the same repetitive tasks by hand.</p>
+        </article>
+        <article class="card">
+          <h3>Clearer operations</h3>
+          <p>Your workflows become repeatable, documented, and much easier to scale.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="cta">
+        <div>
+          <h2>Want one free automation idea for your business?</h2>
+          <p style="color: var(--muted); margin-top: 8px; max-width: 680px;">
+            We'll take a quick look at your lead flow and send one practical idea to help you respond faster or clean up a bottleneck.
+          </p>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="button primary" href="mailto:max451studios@gmail.com?subject=Quick%20Audit%20Request%20for%20Home%20Services">Request a quick audit</a>
+          <a class="button" href="mailto:max451studios@gmail.com?subject=451%20Studios%20Inquiry">Email 451 Studios</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="newsletter" style="margin-top: 80px;">
+      <div class="section-head">
+        <h2>Get AI Automation Tips for Service Businesses</h2>
+        <p>Join The Operator Brief newsletter for weekly automation strategies, case studies, and templates.</p>
+      </div>
+      
+      <div class="card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
+        <h3 style="margin-bottom: 20px;">Free Download: 5 AI Automation Templates</h3>
+        <p style="margin-bottom: 25px; color: var(--muted);">
+          Get instant access to 5 ready-to-use templates for missed call follow-up, estimate tracking, review requests, and more.
+        </p>
+        
+        <!-- Beehiiv Embed Form -->
+        <div style="background: var(--surface-2); padding: 25px; border-radius: 12px; border: 1px solid var(--border);">
+          <form 
+            action="https://api.beehiiv.com/v2/publications/pub_23800689-c8c2-414f-871e-f3d2bbfd8345/subscriptions" 
+            method="POST"
+            target="_blank"
+          >
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="Your email address" 
+              required
+              style="
+                width: 100%;
+                padding: 14px 16px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                color: var(--text);
+                font-size: 16px;
+                margin-bottom: 15px;
+              "
+            >
+            <button 
+              type="submit"
+              style="
+                width: 100%;
+                padding: 14px 16px;
+                background: var(--accent);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s;
+              "
+              onmouseover="this.style.background='#5a95ff'"
+              onmouseout="this.style.background='var(--accent)'"
+            >
+              Get Free Templates
+            </button>
+          </form>
+          
+          <p style="margin-top: 15px; font-size: 14px; color: var(--muted); text-align: center;">
+            Join 1,000+ operators getting AI automation insights weekly.
+          </p>
+        </div>
+        
+        <div style="margin-top: 25px; padding-top: 25px; border-top: 1px solid var(--border);">
+          <h4 style="margin-bottom: 15px;">What you'll get:</h4>
+          <ul style="color: var(--muted); padding-left: 20px;">
+            <li>5 ready-to-use automation templates</li>
+            <li>Weekly AI automation tips for service businesses</li>
+            <li>Case studies from real companies</li>
+            <li>Tool reviews and comparisons</li>
+            <li>Early access to new products</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    451 Studios · AI systems for home service businesses
+  </footer>
+  
+  <!-- Stripe Integration -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    // Initialize Stripe with your publishable key
+    const stripe = Stripe('pk_live_51TNGZjKCitPJBfMMK4h4l8Hl1JXe5q4H8W7Y3l8Y3m4v6Q9z8L2k5f7w8Y9q3v6X9w8L2k5f7w8Y9q3v');
+    
+    // Product price IDs - you'll need to create these in your Stripe dashboard
+    const priceIds = {
+      'price_500': 'price_1TNGZjKCitPJBfMM...', // Replace with actual $500 price ID
+      'price_750': 'price_1TNGZjKCitPJBfMM...'  // Replace with actual $750 price ID
+    };
+    
+    async function startStripeCheckout(priceKey) {
+      try {
+        // In production, you would call your backend to create a checkout session
+        // For now, we'll use a simple redirect to Stripe Checkout
+        // You need to create these products in your Stripe dashboard first
+        
+        // Temporary: Show message about setting up products
+        alert('Stripe checkout is being configured. Please contact us directly at max451studios@gmail.com to get started.');
+        
+        /*
+        // Production code (uncomment when you have backend):
+        const response = await fetch('/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            priceId: priceIds[priceKey],
+            successUrl: window.location.origin + '/success.html',
+            cancelUrl: window.location.origin + '/cancel.html',
+          }),
+        });
+        
+        const session = await response.json();
+        
+        const result = await stripe.redirectToCheckout({
+          sessionId: session.id,
+        });
+        
+        if (result.error) {
+          alert(result.error.message);
+        }
+        */
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Unable to start checkout. Please email us at max451studios@gmail.com');
+      }
+    }
+    
+    // Simple contact form handler
+    document.addEventListener('DOMContentLoaded', function() {
+      const contactForm = document.querySelector('form[action*="beehiiv"]');
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          const email = this.querySelector('input[type="email"]').value;
+          if (email) {
+            // You could add analytics or confirmation here
+            console.log('Newsletter signup:', email);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
