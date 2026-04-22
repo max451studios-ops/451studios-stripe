@@ -69,7 +69,7 @@ In Stripe Dashboard → Developers → Webhooks
 ## Environment Variables Needed
 
 ```
-STRIPE_WRITE_KEY=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
+STRIPE_WRITE_KEY=your_stripe_secret_key_here
 STRIPE_WEBHOOK_SECRET=whsec_... (optional)
 PORT=3000 (or your hosting provider's port)
 ```

@@ -2,7 +2,7 @@
 // Run with: node stripe-server.js
 
 const express = require('express');
-const stripe = require('stripe')(process.env.STRIPE_WRITE_KEY || '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');
+const stripe = require('stripe')(process.env.STRIPE_WRITE_KEY);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,9 +17,9 @@ app.post('/create-checkout-session', async (req, res) => {
     
     // Validate priceId exists in your products
     const validPriceIds = [
-      'price_1TNGZjKCitPJBfMM...', // $500 product
-      'price_1TNGZjKCitPJBfMM...'  // $750 product
-    ];
+      process.env.STRIPE_PRICE_500, // $500 product
+      process.env.STRIPE_PRICE_750  // $750 product
+    ].filter(Boolean); // Remove empty values if env vars not set
     
     if (!validPriceIds.includes(priceId)) {
       return res.status(400).json({ error: 'Invalid price ID' });
@@ -58,7 +58,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET || 'whsec_...'
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
