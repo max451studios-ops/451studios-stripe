@@ -6,6 +6,26 @@ const stripe = require('stripe')(process.env.STRIPE_WRITE_KEY);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// CORS middleware - allow requests from 451studios.com
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://451studios.com',
+    'https://www.451studios.com',
+    'http://localhost:3000',
+    'http://localhost:8000'
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.static('.')); // Serve HTML files from current directory
