@@ -33,7 +33,7 @@ app.use(express.static('.')); // Serve HTML files from current directory
 // Create checkout session
 app.post('/create-checkout-session', async (req, res) => {
   try {
-    const { priceId, successUrl, cancelUrl } = req.body;
+    const { priceId } = req.body;
     
     // Validate priceId exists in your products
     const validPriceIds = [
@@ -54,8 +54,8 @@ app.post('/create-checkout-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: successUrl || `${req.headers.origin}/success.html`,
-      cancel_url: cancelUrl || `${req.headers.origin}/cancel.html`,
+      success_url: 'https://451studios.com/success.html',
+      cancel_url: 'https://451studios.com/cancel.html',
       metadata: {
         product: 'Starter Automation Sprint',
         price: priceId.includes('500') ? '500' : '750'
@@ -90,10 +90,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     case 'checkout.session.completed':
       const session = event.data.object;
       console.log('Payment succeeded:', session.id);
-      // Here you can:
-      // - Send confirmation email
-      // - Create customer record
-      // - Trigger onboarding workflow
       break;
     case 'payment_intent.succeeded':
       const paymentIntent = event.data.object;
