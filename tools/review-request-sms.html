@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Request SMS — 451 Studios</title>
+  <link rel="icon" type="image/svg+xml" href="https://451studios.com/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0b;
+      color: #e4e4e7;
+      line-height: 1.6;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .nav a { color: #a1a1aa; text-decoration: none; font-size: 0.9rem; }
+    .nav a:hover { color: #fff; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .logo { font-weight: 700; font-size: 1.2rem; color: #fff; }
+    .logo span { color: #a855f7; }
+
+    .hero {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(168,85,247,0.1);
+      color: #a855f7;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #e4e4e7 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: #a1a1aa;
+      max-width: 650px;
+      margin: 0 auto 2rem;
+    }
+    .hero .price {
+      display: inline-block;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.5rem 1.5rem;
+      border-radius: 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+    .hero .price span { color: #a1a1aa; font-weight: 400; font-size: 1rem; }
+
+    .btn-primary {
+      display: inline-block;
+      background: #a855f7;
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #9333ea; }
+    .btn-secondary {
+      display: inline-block;
+      background: rgba(255,255,255,0.06);
+      color: #e4e4e7;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s;
+      margin-left: 0.75rem;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+    section { max-width: 1100px; margin: 5rem auto; padding: 0 2rem; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(168,85,247,0.3); }
+    .feature-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .feature-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .feature-card p { color: #a1a1aa; font-size: 0.9rem; }
+
+    .how-it-works {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .step { text-align: center; }
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: rgba(168,85,247,0.15);
+      color: #a855f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 0 auto 1rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .step p { color: #a1a1aa; font-size: 0.9rem; }
+
+    .pricing-box {
+      max-width: 400px;
+      margin: 2rem auto;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .pricing-box .price { font-size: 2.5rem; font-weight: 800; }
+    .pricing-box .price span { font-size: 1rem; font-weight: 400; color: #a1a1aa; }
+    .pricing-box .perks { text-align: left; margin: 1.5rem 0; }
+    .pricing-box .perks li {
+      list-style: none;
+      padding: 0.4rem 0;
+      color: #a1a1aa;
+      font-size: 0.9rem;
+    }
+    .pricing-box .perks li::before { content: "✓ "; color: #22c55e; font-weight: 700; }
+
+    .faq-item {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 1.25rem 0;
+    }
+    .faq-item h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .faq-item p { color: #a1a1aa; font-size: 0.9rem; }
+
+    .cta-section {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(168,85,247,0.04);
+      border: 1px solid rgba(168,85,247,0.1);
+      border-radius: 20px;
+      margin: 5rem auto;
+      max-width: 800px;
+    }
+    .cta-section h2 { font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .cta-section p { color: #a1a1aa; margin-bottom: 1.5rem; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #52525b;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    footer a { color: #a1a1aa; text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 1rem; }
+      .nav { padding: 0.75rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="https://451studios.com" class="logo">451 <span>Studios</span></a>
+    <div class="nav-links">
+      <a href="https://451studios.com/tools/">Tools</a>
+      <a href="index.html">All Tools</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">🚀 New Tool</div>
+    <h1>Review Request SMS</h1>
+    <p>Turn completed jobs into 5-star reviews automatically. Text your customers after service with a one-tap link to review you on Google or Yelp.</p>
+    <div class="price">$9 <span>/ month</span></div>
+    <br>
+    <a href="review-request-app.html" class="btn-primary">Open Dashboard</a>
+    <a href="#how-it-works" class="btn-secondary">How It Works</a>
+  </div>
+
+  <section id="features">
+    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Everything you need</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Auto Review Requests</h3>
+        <p>Text customers automatically after service is completed. No manual follow-ups.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>Google & Yelp Links</h3>
+        <p>One-tap links to review you on Google, Yelp, or both. Customer picks where to leave feedback.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Smart Timing</h3>
+        <p>Choose when the text goes out — right after service, next morning, or custom delay.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✏️</div>
+        <h3>Custom Templates</h3>
+        <p>Write your own SMS message with {{customer_name}} and {{shop_name}} placeholders.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Tracking Dashboard</h3>
+        <p>See who got texts, who clicked, and who left a review. Measure what works.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔌</div>
+        <h3>API Ready</h3>
+        <p>Auto-trigger from any system via webhook or API. Integrate with your shop software.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works">
+    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center;">How it works</h2>
+    <div class="how-it-works">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Connect</h3>
+        <p>Link your Google and Yelp review pages. One-time setup.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Configure</h3>
+        <p>Set your message template and when texts should send.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Send</h3>
+        <p>Enter a customer phone and name, hit send. Or use the API to auto-trigger.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Grow</h3>
+        <p>Watch your reviews pile up. More reviews → more trust → more customers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="pricing-box">
+      <div class="price">$9 <span>/ month</span></div>
+      <p style="color: #a1a1aa; font-size: 0.9rem; margin-bottom: 1rem;">Per location. Cancel anytime.</p>
+      <ul class="perks">
+        <li>Unlimited review requests</li>
+        <li>Google & Yelp integration</li>
+        <li>Custom SMS templates</li>
+        <li>Delivery tracking dashboard</li>
+        <li>API access</li>
+        <li>Bulk import customers</li>
+      </ul>
+      <a href="review-request-app.html" class="btn-primary" style="width: 100%; text-align: center;">Get Started</a>
+    </div>
+    <p style="text-align: center; color: #52525b; font-size: 0.85rem; margin-top: 0.5rem;">
+      Bundle with all 26 tools for $49/mo — <a href="index.html" style="color: #a855f7;">see the full suite</a>
+    </p>
+  </section>
+
+  <section>
+    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Frequently asked</h2>
+    <div class="faq-item">
+      <h3>Do customers need to opt in?</h3>
+      <p>Yes. SMS regulations require opt-in. We provide opt-in confirmation messages and a "STOP to unsubscribe" option built in.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I send to my existing customer list?</h3>
+      <p>Only if they've opted in to receive texts from you. Use our bulk import to upload opted-in numbers.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What SMS costs are included?</h3>
+      <p>The $9/mo covers the software. You pay Twilio directly for SMS sending (~$0.0079/text). Most shops spend under $5/mo.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I connect this to my shop software?</h3>
+      <p>Yes. We have a simple API endpoint. When you mark a job as complete, send us a webhook and we'll text the customer automatically.</p>
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <h2>Ready to get more reviews?</h2>
+    <p>Take the follow-up off your plate. Set up in 5 minutes.</p>
+    <a href="review-request-app.html" class="btn-primary">Open Dashboard</a>
+  </div>
+
+  <footer>
+    <p><a href="https://451studios.com">451 Studios LLC</a> &mdash; Built for shops that care about their reputation.</p>
+  </footer>
+</body>
+</html>

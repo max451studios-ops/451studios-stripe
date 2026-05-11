@@ -289,6 +289,73 @@ app.get('/cancel', (req, res) => {
   res.sendFile(__dirname + '/cancel.html');
 });
 
+// --- Review Request SMS API ---
+let twilioClient = null;
+function getTwilioClient() {
+  if (twilioClient) return twilioClient;
+  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+    try {
+      twilioClient = require('twilio')(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN
+      );
+      console.log('✅ Twilio client initialized');
+    } catch (e) {
+      console.error('❌ Twilio init failed:', e.message);
+    }
+  }
+  return twilioClient;
+}
+
+app.post('/api/send-review-request', async (req, res) => {
+  try {
+    const { name, phone, shop, googleLink, yelpLink, template } = req.body;
+    
+    if (!name || !phone) {
+      return res.status(400).json({ error: 'Name and phone are required' });
+    }
+
+    // Build message from template
+    let message = (template || "Hey {{name}}, thanks for choosing {{shop}}! We'd love your feedback. Leave a review: {{google_link}} Reply STOP to opt out.")
+      .replace(/\{\{name\}\}/g, name)
+      .replace(/\{\{shop\}\}/g, shop || 'our shop')
+      .replace(/\{\{google_link\}\}/g, googleLink || '')
+      .replace(/\{\{yelp_link\}\}/g, yelpLink || '');
+
+    // Clean up empty links
+    message = message.replace(/\s+/g, ' ').trim();
+
+    const client = getTwilioClient();
+    
+    if (client) {
+      const twilioRes = await client.messages.create({
+        body: message,
+        from: process.env.TWILIO_PHONE_NUMBER || '+18559662839',
+        to: phone
+      });
+      
+      console.log(`✅ SMS sent to ${phone} (SID: ${twilioRes.sid})`);
+      res.json({ 
+        success: true, 
+        sid: twilioRes.sid,
+        status: twilioRes.status,
+        message: `Review request sent to ${name}`
+      });
+    } else {
+      // Fallback: log it for demo mode
+      console.log(`📱 [DEMO] Would send to ${phone}: "${message}"`);
+      res.json({
+        success: true,
+        demo: true,
+        message: `[Demo] SMS logged for ${name} at ${phone}. Add Twilio env vars to send live.`
+      });
+    }
+  } catch (error) {
+    console.error('❌ SMS send error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

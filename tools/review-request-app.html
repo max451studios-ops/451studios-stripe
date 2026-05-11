@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Request SMS — Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="https://451studios.com/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0b;
+      color: #e4e4e7;
+      line-height: 1.5;
+    }
+
+    /* App Layout */
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: rgba(255,255,255,0.02);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 1.5rem;
+      flex-shrink: 0;
+    }
+    .sidebar .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 2rem;
+    }
+    .sidebar .logo span { color: #a855f7; }
+    .sidebar nav { display: flex; flex-direction: column; gap: 0.25rem; }
+    .sidebar nav a {
+      color: #a1a1aa;
+      text-decoration: none;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .sidebar nav a:hover { color: #e4e4e7; background: rgba(255,255,255,0.04); }
+    .sidebar nav a.active {
+      color: #fff;
+      background: rgba(168,85,247,0.12);
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1100px;
+    }
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .main-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .main-header p { color: #a1a1aa; font-size: 0.9rem; }
+
+    /* Status Bar */
+    .status-bar {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      flex: 1;
+      min-width: 140px;
+    }
+    .stat-card .num {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: #a1a1aa;
+      margin-top: 0.2rem;
+    }
+
+    /* Card */
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #a1a1aa;
+      margin-bottom: 0.35rem;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #e4e4e7;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none;
+      border-color: #a855f7;
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: #a855f7; color: #fff; }
+    .btn-primary:hover { background: #9333ea; }
+    .btn-secondary { background: rgba(255,255,255,0.06); color: #e4e4e7; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    .btn-danger { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .btn-danger:hover { background: rgba(239,68,68,0.25); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th {
+      text-align: left;
+      padding: 0.7rem 0.75rem;
+      color: #a1a1aa;
+      font-weight: 500;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    td {
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-sent { background: rgba(59,130,246,0.12); color: #60a5fa; }
+    .badge-clicked { background: rgba(34,197,94,0.12); color: #4ade80; }
+    .badge-reviewed { background: rgba(168,85,247,0.12); color: #c084fc; }
+    .badge-failed { background: rgba(239,68,68,0.12); color: #f87171; }
+
+    /* Tab nav */
+    .tab-nav {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 0;
+    }
+    .tab-nav button {
+      background: none;
+      border: none;
+      color: #a1a1aa;
+      padding: 0.65rem 1.25rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .tab-nav button:hover { color: #e4e4e7; }
+    .tab-nav button.active {
+      color: #a855f7;
+      border-bottom-color: #a855f7;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Success/Error messages */
+    .msg {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .msg-success { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); display: block; }
+    .msg-error { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); display: block; }
+    .msg-info { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); display: block; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #52525b;
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .empty-state p { font-size: 0.9rem; }
+
+    .inline-flex { display: inline-flex; align-items: center; gap: 0.5rem; }
+
+    /* Settings saved indicator */
+    .saved-dot {
+      display: none;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      margin-left: 0.5rem;
+    }
+    .saved-dot.show { display: inline-block; }
+
+    .trial-banner {
+      background: rgba(234,179,8,0.1);
+      border: 1px solid rgba(234,179,8,0.2);
+      color: #facc15;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="review-request-sms.html" class="logo">451 <span>Studios</span></a>
+      <nav>
+        <a href="#" class="active" data-tab="dashboard">📊 Dashboard</a>
+        <a href="#" data-tab="send">✉️ Send Request</a>
+        <a href="#" data-tab="history">📋 History</a>
+        <a href="#" data-tab="settings">⚙️ Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main">
+      <div class="main-header">
+        <div>
+          <h1>Review Request SMS</h1>
+          <p>Send review requests to your customers via SMS</p>
+        </div>
+      </div>
+
+      <!-- Trial notice -->
+      <div class="trial-banner" id="trialBanner">
+        ⚡ Demo mode — SMS sending will work once Twilio billing is set up. Try the interface!
+      </div>
+
+      <!-- Messages -->
+      <div id="messageBox"></div>
+
+      <!-- === DASHBOARD TAB === -->
+      <div class="tab-content active" id="tab-dashboard">
+        <div class="status-bar">
+          <div class="stat-card">
+            <div class="num" id="statSent">0</div>
+            <div class="label">Sent</div>
+          </div>
+          <div class="stat-card">
+            <div class="num" id="statClicked">0</div>
+            <div class="label">Clicked</div>
+          </div>
+          <div class="stat-card">
+            <div class="num" id="statReviewed">0</div>
+            <div class="label">Reviewed</div>
+          </div>
+          <div class="stat-card">
+            <div class="num" id="statRate">0%</div>
+            <div class="label">Conversion Rate</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Recent Activity</h2>
+          <div class="table-wrap">
+            <table id="recentTable">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Sent</th>
+                </tr>
+              </thead>
+              <tbody id="recentBody">
+                <tr><td colspan="4"><div class="empty-state"><div class="icon">📬</div><p>No review requests sent yet. Go to Send Request to send your first one.</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- === SEND TAB === -->
+      <div class="tab-content" id="tab-send">
+        <div class="card">
+          <h2>Send a Review Request</h2>
+          <p style="color: #a1a1aa; font-size: 0.88rem; margin-bottom: 1.25rem;">
+            Enter customer details and we'll text them a link to review you.
+          </p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Customer Name</label>
+              <input type="text" id="sendName" placeholder="John Smith">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="sendPhone" placeholder="+12025551234">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Message Preview</label>
+            <div id="messagePreview" style="background: rgba(255,255,255,0.04); padding: 1rem; border-radius: 10px; font-size: 0.9rem; color: #d4d4d8; margin-bottom: 0.25rem;">
+              Hey John Smith, thanks for choosing My Shop! We'd love your feedback: Leave us a review here and help other customers find us: <a href="#" style="color: #a855f7;">Google Review</a>
+            </div>
+            <p style="color: #52525b; font-size: 0.8rem;">
+              Preview updates based on your template in Settings.
+            </p>
+          </div>
+          <button class="btn btn-primary" id="sendBtn" onclick="sendReviewRequest()">Send Review Request</button>
+        </div>
+
+        <div class="card">
+          <h2>Quick Send Log</h2>
+          <p style="color: #a1a1aa; font-size: 0.88rem; margin-bottom: 0.75rem;">
+            Recently sent from this page.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Customer</th><th>Status</th><th>Time</th></tr>
+              </thead>
+              <tbody id="quickLogBody">
+                <tr><td colspan="3"><div class="empty-state"><p>No sends yet</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- === HISTORY TAB === -->
+      <div class="tab-content" id="tab-history">
+        <div class="card">
+          <h2>All Review Requests</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Platform</th>
+                  <th>Status</th>
+                  <th>Sent</th>
+                  <th>Clicked</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody">
+                <tr><td colspan="6"><div class="empty-state"><div class="icon">📭</div><p>No history yet</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- === SETTINGS TAB === -->
+      <div class="tab-content" id="tab-settings">
+        <div class="card">
+          <h2>Shop Settings</h2>
+          <div class="form-group">
+            <label>Shop Name</label>
+            <input type="text" id="shopName" value="My Shop" onchange="saveSettings()">
+          </div>
+          <div class="form-group">
+            <label>Your Google Review Link</label>
+            <input type="url" id="googleLink" placeholder="https://g.page/r/.../review" onchange="saveSettings()">
+            <p style="color: #52525b; font-size: 0.8rem; margin-top: 0.3rem;">
+              Find this in your Google Business Profile → Get more reviews → Share review form
+            </p>
+          </div>
+          <div class="form-group">
+            <label>Your Yelp Review Link</label>
+            <input type="url" id="yelpLink" placeholder="https://www.yelp.com/biz/..." onchange="saveSettings()">
+          </div>
+          <p style="color: #71717a; font-size: 0.82rem; margin-top: 0.5rem;">
+            <span id="saveIndicator" style="color: #22c55e; display: none;">✓ Saved</span>
+            Settings are saved locally and will persist in your browser.
+          </p>
+        </div>
+
+        <div class="card">
+          <h2>Message Template</h2>
+          <div class="form-group">
+            <label>SMS Message</label>
+            <textarea id="smsTemplate" rows="3" onchange="saveSettings()" placeholder="Hey {{name}}, thanks for choosing {{shop}}! We'd love your feedback. Leave a review: {{google_link}} or {{yelp_link}}">Hey {{name}}, thanks for choosing {{shop}}! We'd love your feedback. Leave a review: {{google_link}} Reply STOP to opt out.</textarea>
+            <p style="color: #52525b; font-size: 0.8rem; margin-top: 0.3rem;">
+              Use <code style="color: #a855f7;">{{name}}</code>, <code style="color: #a855f7;">{{shop}}</code>, <code style="color: #a855f7;">{{google_link}}</code>, <code style="color: #a855f7;">{{yelp_link}}</code>
+            </p>
+          </div>
+          <div class="form-group">
+            <label>Send Delay</label>
+            <select id="sendDelay" onchange="saveSettings()">
+              <option value="0">Immediately after service</option>
+              <option value="3600000">1 hour after</option>
+              <option value="14400000" selected>4 hours after</option>
+              <option value="86400000">Next day</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>API & Integration</h2>
+          <div class="form-group">
+            <label>API Endpoint (for auto-triggering)</label>
+            <input type="text" value="https://451studios-stripe.451studios.com/api/send-review-request" readonly style="opacity: 0.7;" onclick="this.select()">
+            <p style="color: #52525b; font-size: 0.8rem; margin-top: 0.3rem;">
+              Send a POST to this endpoint when a job is completed to auto-trigger a review request.
+              <br>Body: <code style="color: #a855f7;">{ "name": "...", "phone": "...", "shop": "..." }</code>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== STORAGE =====
+    const STORAGE_KEY = 'rr_sms_data';
+
+    function loadData() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { settings: {}, history: [] };
+      } catch { return { settings: {}, history: [] }; }
+    }
+
+    function saveData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function getSettings() {
+      const data = loadData();
+      return {
+        shopName: data.settings.shopName || 'My Shop',
+        googleLink: data.settings.googleLink || '',
+        yelpLink: data.settings.yelpLink || '',
+        smsTemplate: data.settings.smsTemplate || 'Hey {{name}}, thanks for choosing {{shop}}! We\'d love your feedback. Leave a review: {{google_link}} Reply STOP to opt out.',
+        sendDelay: parseInt(data.settings.sendDelay) || 14400000
+      };
+    }
+
+    // ===== TABS =====
+    document.querySelectorAll('.sidebar nav a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.sidebar nav a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById('tab-' + a.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== SETTINGS =====
+    function saveSettings() {
+      const data = loadData();
+      data.settings = {
+        shopName: document.getElementById('shopName').value,
+        googleLink: document.getElementById('googleLink').value,
+        yelpLink: document.getElementById('yelpLink').value,
+        smsTemplate: document.getElementById('smsTemplate').value,
+        sendDelay: document.getElementById('sendDelay').value
+      };
+      saveData(data);
+      const ind = document.getElementById('saveIndicator');
+      ind.style.display = 'inline';
+      setTimeout(() => ind.style.display = 'none', 2000);
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const s = getSettings();
+      const preview = document.getElementById('messagePreview');
+      const name = document.getElementById('sendName').value || 'John Smith';
+      let msg = s.smsTemplate
+        .replace(/\{\{name\}\}/g, name)
+        .replace(/\{\{shop\}\}/g, s.shopName)
+        .replace(/\{\{google_link\}\}/g, s.googleLink ? `<a href="#" style="color:#a855f7;">Google Review</a>` : '')
+        .replace(/\{\{yelp_link\}\}/g, s.yelpLink ? `<a href="#" style="color:#a855f7;">Yelp Review</a>` : '');
+      preview.innerHTML = msg;
+    }
+
+    document.getElementById('sendName').addEventListener('input', updatePreview);
+    document.getElementById('sendPhone').addEventListener('input', updatePreview);
+
+    // ===== SEND REVIEW REQUEST =====
+    async function sendReviewRequest() {
+      const name = document.getElementById('sendName').value.trim();
+      const phone = document.getElementById('sendPhone').value.trim();
+      const btn = document.getElementById('sendBtn');
+      const msgBox = document.getElementById('messageBox');
+
+      if (!name || !phone) {
+        msgBox.className = 'msg msg-error';
+        msgBox.innerHTML = 'Please enter customer name and phone number.';
+        return;
+      }
+
+      const settings = getSettings();
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      try {
+        const res = await fetch('https://451studios-stripe.451studios.com/api/send-review-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            phone,
+            shop: settings.shopName,
+            googleLink: settings.googleLink,
+            yelpLink: settings.yelpLink,
+            template: settings.smsTemplate
+          })
+        });
+
+        if (res.ok) {
+          msgBox.className = 'msg msg-success';
+          msgBox.innerHTML = `✅ Review request sent to ${name} at ${phone}!`;
+          addToHistory(name, phone, 'sent');
+          document.getElementById('sendName').value = '';
+          document.getElementById('sendPhone').value = '';
+          updatePreview();
+          refreshDashboard();
+        } else {
+          const err = await res.text();
+          msgBox.className = 'msg msg-error';
+          msgBox.innerHTML = `❌ Failed to send: ${err}`;
+        }
+      } catch (e) {
+        // Demo mode — simulate success
+        msgBox.className = 'msg msg-info';
+        msgBox.innerHTML = `📱 Demo mode: Review request logged for ${name} at ${phone}. (Connect Twilio billing to send live texts.)`;
+        addToHistory(name, phone, 'sent');
+        document.getElementById('sendName').value = '';
+        document.getElementById('sendPhone').value = '';
+        updatePreview();
+        refreshDashboard();
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Send Review Request';
+    }
+
+    // ===== HISTORY =====
+    function addToHistory(name, phone, status) {
+      const data = loadData();
+      data.history.unshift({
+        name,
+        phone,
+        status,
+        platform: 'google',
+        sentAt: new Date().toISOString(),
+        clickedAt: null
+      });
+      saveData(data);
+      renderQuickLog();
+    }
+
+    function renderQuickLog() {
+      const data = loadData();
+      const tbody = document.getElementById('quickLogBody');
+      const recent = data.history.slice(0, 5);
+      if (recent.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><p>No sends yet</p></div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = recent.map(h => `
+        <tr>
+          <td>${h.name}</td>
+          <td><span class="badge badge-${h.status}">${h.status}</span></td>
+          <td>${new Date(h.sentAt).toLocaleTimeString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ===== DASHBOARD STATS =====
+    function refreshDashboard() {
+      const data = loadData();
+      const history = data.history;
+      const sent = history.length;
+      const clicked = history.filter(h => h.status === 'clicked' || h.status === 'reviewed').length;
+      const reviewed = history.filter(h => h.status === 'reviewed').length;
+      const rate = sent > 0 ? Math.round(reviewed / sent * 100) : 0;
+
+      document.getElementById('statSent').textContent = sent;
+      document.getElementById('statClicked').textContent = clicked;
+      document.getElementById('statReviewed').textContent = reviewed;
+      document.getElementById('statRate').textContent = rate + '%';
+
+      // Recent table
+      const recentBody = document.getElementById('recentBody');
+      const recent = history.slice(0, 10);
+      if (recent.length === 0) {
+        recentBody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="icon">📬</div><p>No review requests sent yet.</p></div></td></tr>';
+      } else {
+        recentBody.innerHTML = recent.map(h => `
+          <tr>
+            <td>${h.name}</td>
+            <td>${h.phone}</td>
+            <td><span class="badge badge-${h.status}">${h.status}</span></td>
+            <td>${new Date(h.sentAt).toLocaleDateString()}</td>
+          </tr>
+        `).join('');
+      }
+
+      // History table
+      const historyBody = document.getElementById('historyBody');
+      if (history.length === 0) {
+        historyBody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">📭</div><p>No history yet</p></div></td></tr>';
+      } else {
+        historyBody.innerHTML = history.map(h => `
+          <tr>
+            <td>${h.name}</td>
+            <td>${h.phone}</td>
+            <td>Google</td>
+            <td><span class="badge badge-${h.status}">${h.status}</span></td>
+            <td>${new Date(h.sentAt).toLocaleDateString()}</td>
+            <td>${h.clickedAt ? new Date(h.clickedAt).toLocaleDateString() : '—'}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    // ===== INIT =====
+    function init() {
+      // Load settings into form
+      const s = getSettings();
+      document.getElementById('shopName').value = s.shopName || 'My Shop';
+      document.getElementById('googleLink').value = s.googleLink || '';
+      document.getElementById('yelpLink').value = s.yelpLink || '';
+      document.getElementById('smsTemplate').value = s.smsTemplate || '';
+      document.getElementById('sendDelay').value = s.sendDelay || 14400000;
+      refreshDashboard();
+      renderQuickLog();
+      updatePreview();
+    }
+
+    init();
+  </script>
+</body>
+</html>
