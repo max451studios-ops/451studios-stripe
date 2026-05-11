@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Capture Preview | 451 Studios</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #081018;
+      --surface: #101926;
+      --surface-2: #152132;
+      --border: #223147;
+      --text: #edf3ff;
+      --muted: #9fb0cb;
+      --accent: #70a7ff;
+      --accent-2: #8b7dff;
+      --green: #58d68d;
+      --shadow: 0 14px 40px rgba(0,0,0,.28);
+      --max: 1100px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top left, rgba(112,167,255,.14), transparent 26%), linear-gradient(180deg, #081018 0%, #0c1420 100%);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .app-wrap { max-width: var(--max); margin: 0 auto; }
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+    }
+    .app-header h1 { font-size: 1.5rem; }
+    .app-header a { color: var(--muted); font-size: .85rem; }
+    
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 880px) {
+      .main-grid { grid-template-columns: 1fr; }
+      body { padding: 16px; }
+    }
+    
+    /* Setup Panel */
+    .setup-card {
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    
+    label {
+      display: block;
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color .2s;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(112,167,255,.15);
+    }
+    input::placeholder, textarea::placeholder { color: #3a4b62; }
+    textarea { resize: vertical; min-height: 80px; }
+    .form-group { margin-bottom: 16px; }
+    
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 24px; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text); font-weight: 600; transition: .18s ease;
+      cursor: pointer; font-size: 1rem; width: 100%;
+    }
+    .button:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none; color: white;
+      box-shadow: 0 10px 24px rgba(112,167,255,.22);
+    }
+    .button.primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    
+    /* Preview Panel */
+    .preview-wrap {
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .preview-wrap h2 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Phone Frame */
+    .phone-frame {
+      max-width: 340px;
+      margin: 0 auto;
+      background: #f5f7fa;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      color: #1a1a2e;
+    }
+    .phone-status {
+      background: #e8ebf0;
+      padding: 12px 16px 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: .74rem;
+      font-weight: 600;
+      color: #6b7280;
+    }
+    .phone-header {
+      background: white;
+      padding: 20px 20px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .phone-header .avatar {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #5469d4, #6c5ce7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+    .phone-header .business-info {
+      flex: 1;
+    }
+    .phone-header .business-name {
+      font-weight: 700;
+      font-size: .95rem;
+    }
+    .phone-header .business-status {
+      font-size: .74rem;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .phone-header .business-status::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      display: inline-block;
+    }
+    
+    .phone-body {
+      background: #f0f2f5;
+      padding: 14px 14px 20px;
+      min-height: 320px;
+    }
+    
+    /* Chat bubbles */
+    .bubble-wrapper { display: flex; margin-bottom: 10px; }
+    .bubble-wrapper.customer { justify-content: flex-end; }
+    .bubble-wrapper.business { justify-content: flex-start; }
+    .bubble-wrapper.typing { justify-content: flex-start; }
+    
+    .bubble {
+      max-width: 80%;
+      padding: 12px 14px;
+      border-radius: 18px;
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+    .bubble.customer {
+      background: #5469d4;
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble.business {
+      background: white;
+      color: #1a1a2e;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    }
+    
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 14px 20px;
+      background: white;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+    }
+    .typing-indicator span {
+      width: 8px; height: 8px;
+      background: #9ca3af;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: .2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+    
+    .bubble-time {
+      font-size: .68rem;
+      color: #9ca3af;
+      margin-top: 2px;
+      text-align: right;
+    }
+    .time-center {
+      text-align: center;
+      font-size: .72rem;
+      color: #9ca3af;
+      margin: 14px 0 8px;
+    }
+    
+    .phone-input-area {
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .phone-input-area input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      font-size: .88rem;
+      background: #f9fafb;
+      color: #1a1a2e;
+    }
+    .phone-input-area input::placeholder { color: #9ca3af; }
+    .phone-input-area .send-btn {
+      width: 36px; height: 36px;
+      background: #5469d4;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .empty-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      color: var(--muted);
+      text-align: center;
+      gap: 10px;
+    }
+    .empty-preview .icon { font-size: 2.5rem; opacity: .4; }
+    .empty-preview p { font-size: .88rem; max-width: 280px; }
+    
+    .preview-note {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(112,167,255,.06);
+      border: 1px solid rgba(112,167,255,.12);
+      border-radius: 10px;
+      font-size: .82rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrap">
+    <div class="app-header">
+      <h1>📱 Lead Capture + SMS Preview</h1>
+      <a href="/tools/lead-capture.html">← Product page</a>
+    </div>
+
+    <div class="main-grid">
+      <!-- Setup -->
+      <div class="setup-card">
+        <div class="form-group">
+          <label for="bizName">Your Business Name</label>
+          <input type="text" id="bizName" placeholder="e.g. Smith Plumbing &amp; Heating" />
+        </div>
+        <div class="form-group">
+          <label for="bizPhone">Your Business Phone Number</label>
+          <input type="tel" id="bizPhone" placeholder="e.g. (555) 123-4567" />
+        </div>
+        <div class="form-group">
+          <label for="leadNeeds">What does the lead typically want?</label>
+          <textarea id="leadNeeds" placeholder="e.g. I need a quote for a water heater replacement. My water heater is leaking and I need someone to come take a look."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="leadName">Lead's Name (for preview)</label>
+          <input type="text" id="leadName" placeholder="e.g. Sarah Johnson" />
+        </div>
+        
+        <button class="button primary" onclick="showPreview()">
+          👁️ Preview Lead Flow
+        </button>
+        
+        <div class="preview-note" style="margin-top:16px;">
+          <strong>📌 Demo only.</strong> No actual SMS is sent. This is a visual preview of what your lead capture + auto-reply flow would look like.
+        </div>
+      </div>
+      
+      <!-- Preview -->
+      <div class="preview-wrap">
+        <h2>📱 Customer's View</h2>
+        <div id="previewContainer">
+          <div class="empty-preview">
+            <div class="icon">📱</div>
+            <p>Fill in the details on the left and click "Preview Lead Flow" to see the customer's experience.</p>
+          </div>
+        </div>
+        <div class="preview-note">
+          This is a mobile preview showing how a lead would see your form and the SMS auto-reply they'd receive.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function $(id) { return document.getElementById(id); }
+    
+    function showPreview() {
+      const bizName = $('bizName').value.trim() || 'Your Business';
+      const bizPhone = $('bizPhone').value.trim() || '(555) 000-0000';
+      const leadNeeds = $('leadNeeds').value.trim() || 'I need help with my HVAC system.';
+      const leadName = $('leadName').value.trim() || 'Lead';
+      
+      const shortName = bizName.length > 20 ? bizName.substring(0, 18) + '…' : bizName;
+      const initials = shortName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+      
+      const autoReply = generateAutoReply(bizName, leadName, leadNeeds);
+      
+      const container = $('previewContainer');
+      container.innerHTML = `
+        <div class="phone-frame">
+          <div class="phone-status">
+            <span>${timeStr}</span>
+            <span>📶 🔋</span>
+          </div>
+          <div class="phone-header">
+            <div class="avatar">${initials}</div>
+            <div class="business-info">
+              <div class="business-name">${escapeHtml(shortName)}</div>
+              <div class="business-status">Online</div>
+            </div>
+          </div>
+          <div class="phone-body">
+            <div class="time-center">Today</div>
+            
+            <div class="bubble-wrapper customer">
+              <div>
+                <div class="bubble customer">Hi! I'm interested in your services.</div>
+                <div class="bubble-time">${timeStr}</div>
+              </div>
+            </div>
+            
+            <div class="bubble-wrapper business">
+              <div>
+                <div class="bubble business">
+                  <strong>Thanks for reaching out to ${escapeHtml(shortName)}!</strong><br><br>
+                  Could you tell me a bit more about what you need? We'll get back to you right away.
+                </div>
+                <div class="bubble-time">${timeStr}</div>
+              </div>
+            </div>
+            
+            <div class="bubble-wrapper customer">
+              <div>
+                <div class="bubble customer">${escapeHtml(leadNeeds)}</div>
+                <div class="bubble-time">${timeStr}</div>
+              </div>
+            </div>
+            
+            <div class="bubble-wrapper typing">
+              <div class="typing-indicator">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            
+            <div class="bubble-wrapper business" style="margin-top:4px;">
+              <div>
+                <div class="bubble business">
+                  ${escapeHtml(autoReply)}
+                </div>
+                <div class="bubble-time">${timeStr}</div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="phone-input-area">
+            <input type="text" placeholder="Message..." disabled />
+            <div class="send-btn">↑</div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function generateAutoReply(bizName, leadName, leadNeeds) {
+      // Generate a realistic auto-reply based on the business and what the lead wants
+      const lowerNeeds = leadNeeds.toLowerCase();
+      
+      let reply = `Hi ${escapeHtml(leadName)}! Thanks for reaching out to ${escapeHtml(bizName)}. `;
+      
+      if (lowerNeeds.includes('quote') || lowerNeeds.includes('estimate') || lowerNeeds.includes('price') || lowerNeeds.includes('cost') || lowerNeeds.includes('how much')) {
+        reply += `We'd love to provide a quote! A member of our team will review your request and get back to you with pricing within the next hour. In the meantime, feel free to call us directly at ${$('bizPhone').value.trim() || 'our number'} if it's urgent.`;
+      } else if (lowerNeeds.includes('appointment') || lowerNeeds.includes('schedule') || lowerNeeds.includes('book') || lowerNeeds.includes('come out') || lowerNeeds.includes('repair') || lowerNeeds.includes('fix')) {
+        reply += `We can definitely help with that! We'll check our schedule and get back to you within 30 minutes to confirm a time. If you need faster service, give us a call at ${$('bizPhone').value.trim() || 'our number'}.`;
+      } else if (lowerNeeds.includes('emergency') || lowerNeeds.includes('urgent') || lowerNeeds.includes('asap') || lowerNeeds.includes('leaking') || lowerNeeds.includes('broken') || lowerNeeds.includes('no heat') || lowerNeeds.includes('no ac') || lowerNeeds.includes('flood')) {
+        reply += `This sounds urgent! We'll prioritize your request and someone will reach out within 15 minutes. If you need immediate assistance, please call us directly at ${$('bizPhone').value.trim() || 'our number'}.`;
+      } else if (lowerNeeds.includes('info') || lowerNeeds.includes('question') || lowerNeeds.includes('wondering') || lowerNeeds.includes('help')) {
+        reply += `We'd be happy to help! A team member will follow up shortly to answer your questions. You can also reach us at ${$('bizPhone').value.trim() || 'our number'} if you'd like to speak with someone right away.`;
+      } else {
+        reply += `Thanks for describing what you need. A member of our team will review your request and follow up shortly. You can also call us at ${$('bizPhone').value.trim() || 'our number'} if you'd like to speak with someone sooner.`;
+      }
+      
+      return reply + `\n\n— ${escapeHtml(bizName)} Team`;
+    }
+    
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

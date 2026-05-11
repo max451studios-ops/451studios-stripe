@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review Response AI | 451 Studios</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #081018;
+      --surface: #101926;
+      --surface-2: #152132;
+      --border: #223147;
+      --text: #edf3ff;
+      --muted: #9fb0cb;
+      --accent: #70a7ff;
+      --accent-2: #8b7dff;
+      --green: #58d68d;
+      --red: #e74c3c;
+      --orange: #f39c12;
+      --shadow: 0 14px 40px rgba(0,0,0,.28);
+      --max: 980px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top left, rgba(112,167,255,.14), transparent 26%), linear-gradient(180deg, #081018 0%, #0c1420 100%);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .app-wrap { max-width: var(--max); margin: 0 auto; }
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+    }
+    .app-header h1 { font-size: 1.5rem; }
+    .app-header a { color: var(--muted); font-size: .85rem; }
+    
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 820px) {
+      .main-grid { grid-template-columns: 1fr; }
+      body { padding: 16px; }
+    }
+    
+    /* Input Card */
+    .input-card {
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    
+    label {
+      display: block;
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    textarea, input, select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color .2s;
+    }
+    textarea:focus, input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(112,167,255,.15);
+    }
+    textarea::placeholder { color: #3a4b62; }
+    textarea { resize: vertical; min-height: 120px; }
+    select { cursor: pointer; }
+    select option { background: var(--surface); color: var(--text); }
+    
+    .form-group { margin-bottom: 18px; }
+    
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 24px; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text); font-weight: 600; transition: .18s ease;
+      cursor: pointer; font-size: 1rem; width: 100%;
+    }
+    .button:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none; color: white;
+      box-shadow: 0 10px 24px rgba(112,167,255,.22);
+    }
+    .button.primary:disabled {
+      opacity: .5; cursor: not-allowed; transform: none;
+    }
+    
+    .star-select {
+      display: flex;
+      gap: 6px;
+      font-size: 1.5rem;
+    }
+    .star-select span {
+      cursor: pointer;
+      color: #3a4b62;
+      transition: color .15s;
+      user-select: none;
+    }
+    .star-select span.active, .star-select span:hover {
+      color: #f1c40f;
+    }
+    .star-select span:hover ~ span {
+      color: #3a4b62;
+    }
+    
+    /* Results */
+    .results-card {
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      min-height: 300px;
+    }
+    .results-card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .tone-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .tone-card:last-child { margin-bottom: 0; }
+    .tone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .tone-label {
+      font-weight: 600;
+      font-size: .88rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(112,167,255,.1);
+      border: 1px solid rgba(112,167,255,.18);
+    }
+    .tone-label.professional { background: rgba(112,167,255,.1); border-color: rgba(112,167,255,.18); }
+    .tone-label.friendly { background: rgba(88,214,141,.1); border-color: rgba(88,214,141,.18); color: #c6f5d7; }
+    .tone-label.short { background: rgba(139,125,255,.1); border-color: rgba(139,125,255,.18); color: #d4ccff; }
+    
+    .tone-text {
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .copy-tone-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: .78rem;
+      transition: .15s;
+    }
+    .copy-tone-btn:hover { border-color: var(--accent); color: var(--text); }
+    .copy-tone-btn.copied {
+      background: var(--green);
+      color: #081018;
+      border-color: var(--green);
+    }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      color: var(--muted);
+      text-align: center;
+      gap: 10px;
+    }
+    .empty-state .icon { font-size: 2.8rem; opacity: .4; }
+    .empty-state p { font-size: .88rem; max-width: 260px; }
+    
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,.15);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 60px 0;
+      color: var(--muted);
+    }
+    
+    .error-msg {
+      color: var(--red);
+      font-size: .88rem;
+      margin-top: 8px;
+    }
+    
+    .fallback-note {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(112,167,255,.06);
+      border: 1px solid rgba(112,167,255,.12);
+      border-radius: 10px;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+    .fallback-note code {
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: .78rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrap">
+    <div class="app-header">
+      <h1>✍️ Review Response AI</h1>
+      <a href="/tools/review-response.html">← Product page</a>
+    </div>
+
+    <div class="main-grid">
+      <!-- Input -->
+      <div class="input-card">
+        <div class="form-group">
+          <label for="businessName">Business Name</label>
+          <input type="text" id="businessName" placeholder="e.g. Smith Plumbing &amp; Heating" />
+        </div>
+        
+        <div class="form-group">
+          <label>Rating</label>
+          <div class="star-select" id="starSelect">
+            <span data-star="1">★</span>
+            <span data-star="2">★</span>
+            <span data-star="3">★</span>
+            <span data-star="4">★</span>
+            <span data-star="5">★</span>
+          </div>
+          <input type="hidden" id="rating" value="5" />
+        </div>
+        
+        <div class="form-group">
+          <label for="reviewText">Paste the Review</label>
+          <textarea id="reviewText" placeholder="Paste the Google review here..."></textarea>
+        </div>
+        
+        <button class="button primary" id="generateBtn" onclick="generateResponses()">
+          ✨ Generate Responses
+        </button>
+        <div id="statusMsg" style="margin-top:8px;"></div>
+        
+        <div class="fallback-note">
+          <strong>🔧 Powered by DeepSeek AI.</strong> Responses are AI-generated drafts — always review before posting.
+        </div>
+      </div>
+      
+      <!-- Results -->
+      <div class="results-card" id="resultsCard">
+        <h2>📝 Response Options</h2>
+        <div id="resultsContent">
+          <div class="empty-state">
+            <div class="icon">💬</div>
+            <p>Fill in the details on the left and click "Generate Responses" to get three draft replies.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    // API base — uses server-side proxy on production to protect API key
+    const API_PROXY = 'https://451studios-stripe.451studios.com/api';
+    
+    // Star rating
+    let selectedRating = 5;
+    document.querySelectorAll('#starSelect span').forEach(span => {
+      span.addEventListener('click', function() {
+        selectedRating = parseInt(this.dataset.star);
+        document.getElementById('rating').value = selectedRating;
+        document.querySelectorAll('#starSelect span').forEach(s => {
+          const star = parseInt(s.dataset.star);
+          s.classList.toggle('active', star <= selectedRating);
+        });
+      });
+      // Hover effect
+      span.addEventListener('mouseenter', function() {
+        const hoverStar = parseInt(this.dataset.star);
+        document.querySelectorAll('#starSelect span').forEach(s => {
+          const star = parseInt(s.dataset.star);
+          s.style.color = star <= hoverStar ? '#f1c40f' : '#3a4b62';
+        });
+      });
+    });
+    // Initialize all 5 stars as active
+    document.querySelectorAll('#starSelect span').forEach(s => s.classList.add('active'));
+    
+    function $(id) { return document.getElementById(id); }
+    
+    function setStatus(type, msg) {
+      const el = $('statusMsg');
+      el.className = type ? type + '-msg' : '';
+      el.textContent = msg || '';
+    }
+    
+    async function generateResponses() {
+      const businessName = $('businessName').value.trim();
+      const reviewText = $('reviewText').value.trim();
+      const rating = selectedRating;
+      
+      if (!businessName) { setStatus('error', 'Please enter your business name.'); return; }
+      if (!reviewText || reviewText.length < 10) { setStatus('error', 'Please paste a review (at least 10 characters).'); return; }
+      
+      setStatus('', '');
+      const resultsContent = $('resultsContent');
+      resultsContent.innerHTML = `
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <span>Analyzing review and generating responses...</span>
+        </div>
+      `;
+      
+      const btn = $('generateBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Generating...';
+      
+      try {
+        const prompt = `You are helping a business owner respond to a Google review.
+Business Name: ${businessName}
+Review Rating: ${rating}/5 stars
+Review Text: "${reviewText}"
+
+Generate THREE different response drafts. Each should be ready to copy and paste.
+Always mention the business name naturally. Do not use bracketed placeholders.
+
+1. **Professional** — Polite, well-structured, appropriate tone. Suitable for any rating.
+2. **Friendly** — Warm, personal, conversational. Sounds like a real person wrote it.
+3. **Short** — Brief and direct. Gets straight to the point.
+
+For positive reviews (4-5 stars): Thank them, mention something specific from their review, invite them back.
+For neutral reviews (3 stars): Thank them, acknowledge their feedback, offer to make it right.
+For negative reviews (1-2 stars): Apologize, acknowledge their specific concern, offer to resolve offline, provide a way to contact you.
+
+Format your response EXACTLY as:
+=== PROFESSIONAL ===
+[text]
+
+=== FRIENDLY ===
+[text]
+
+=== SHORT ===
+[text]`;
+
+        const response = await fetch(API_PROXY + '/generate-all-responses', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            review: reviewText,
+            rating: rating,
+            businessName: businessName
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('API error: ' + response.status + ' ' + response.statusText);
+        }
+        
+        const data = await response.json();
+        
+        // New backend returns { responses: { professional, friendly, short } }
+        if (data.responses) {
+          const { professional, friendly, short } = data.responses;
+          resultsContent.innerHTML = '';
+          if (professional) addToneCard(resultsContent, 'Professional', professional, '#70a7ff');
+          if (friendly) addToneCard(resultsContent, 'Friendly', friendly, '#58d68d');
+          if (short) addToneCard(resultsContent, 'Short', short, '#8b7dff');
+        } else {
+          // Fallback: raw response
+          const content = data.response || JSON.stringify(data);
+          resultsContent.innerHTML = `
+            <div class="tone-card">
+              <div class="tone-header">
+                <span class="tone-label">Response</span>
+                <button class="copy-tone-btn" onclick="copyTone(this, 'responseText')">📋 Copy</button>
+              </div>
+              <div class="tone-text" id="responseText">${escapeHtml(content)}</div>
+            </div>
+          `;
+        }
+        
+        setStatus('', '');
+      } catch (err) {
+        console.error('Generation error:', err);
+        resultsContent.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">⚠️</div>
+            <p>Couldn't generate responses: ${err.message}</p>
+            <p style="font-size:.82rem;margin-top:8px;color:var(--muted);">Check your DeepSeek API key or try again.</p>
+          </div>
+        `;
+        setStatus('error', 'Failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ Generate Responses';
+      }
+    }
+    
+    function extractSection(text, label) {
+      const regex = new RegExp('=== ?' + label + ' ?===\\s*([\\s\\S]*?)(?=\\n===|$)', 'i');
+      const match = text.match(regex);
+      return match ? match[1].trim() : null;
+    }
+    
+    function addToneCard(container, label, text, color) {
+      const id = 'tone-' + label.toLowerCase().replace(/\s+/g, '-');
+      const div = document.createElement('div');
+      div.className = 'tone-card';
+      div.innerHTML = `
+        <div class="tone-header">
+          <span class="tone-label ${label.toLowerCase()}">${label}</span>
+          <button class="copy-tone-btn" onclick="copyTone(this, '${id}')">📋 Copy</button>
+        </div>
+        <div class="tone-text" id="${id}">${escapeHtml(text)}</div>
+      `;
+      container.appendChild(div);
+    }
+    
+    function copyTone(btn, textId) {
+      const el = document.getElementById(textId);
+      if (!el) return;
+      const text = el.textContent;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = '✅ Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = '📋 Copy';
+            btn.classList.remove('copied');
+          }, 2500);
+        });
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.textContent = '✅ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '📋 Copy';
+          btn.classList.remove('copied');
+        }, 2500);
+      }
+    }
+    
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

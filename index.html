@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>451 Studios | AI Systems for Home Service Businesses</title>
-  <link rel="icon" href="../branding/favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="../branding/favicon-32x32.png" type="image/png" sizes="32x32" />
-  <link rel="icon" href="../branding/favicon-16x16.png" type="image/png" sizes="16x16" />
-  <link rel="apple-touch-icon" href="../branding/favicon-64x64.png" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="/favicon-64x64.png" />
   <style>
     :root {
       --bg: #081018;
@@ -168,8 +168,9 @@
 <body>
   <header>
     <div class="container nav">
-      <img src="../branding/451studios-logo.png" alt="451 Studios Logo" style="height: 42px; width: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));" />
+      <img src="/451studios-logo.png" alt="451 Studios Logo" style="height: 42px; width: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));" />
       <nav class="nav-links">
+        <a href="/tools/">Tools</a>
         <a href="#services">Services</a>
         <a href="#offer">Offer</a>
         <a href="#process">Process</a>
@@ -442,12 +443,12 @@
   <script src="https://js.stripe.com/v3/"></script>
   <script>
     // Initialize Stripe with your publishable key
-    const stripe = Stripe('pk_live_51TNGZjKCitPJBfMMK4h4l8Hl1JXe5q4H8W7Y3l8Y3m4v6Q9z8L2k5f7w8Y9q3v6X9w8L2k5f7w8Y9q3v');
+    const stripe = Stripe('pk_live_51TNGZjKCitPJBfMMKIbfB955fcIJsQ3uyqQkcjiOVYKyRlEGZzLokw6ouod2gvkWxPrDhXrKZZdOJI09TDQQhysg00uD6DvOte');
     
-    // Product price IDs - you'll need to create these in your Stripe dashboard
+    // Product price IDs
     const priceIds = {
-      'price_500': 'price_1TNGZjKCitPJBfMM...', // Replace with actual $500 price ID
-      'price_750': 'price_1TNGZjKCitPJBfMM...'  // Replace with actual $750 price ID
+      'price_500': 'price_1TP8KgKCitPJBfMMXiJPGUt8', // $500 product
+      'price_750': 'price_1TP8KyKCitPJBfMMcORx4Uuz'  // $750 product
     };
     
     async function startStripeCheckout(priceKey) {
@@ -456,12 +457,8 @@
         // For now, we'll use a simple redirect to Stripe Checkout
         // You need to create these products in your Stripe dashboard first
         
-        // Temporary: Show message about setting up products
-        alert('Stripe checkout is being configured. Please contact us directly at max451studios@gmail.com to get started.');
-        
-        /*
-        // Production code (uncomment when you have backend):
-        const response = await fetch('/create-checkout-session', {
+        // Production code:
+        const response = await fetch('https://451studios-stripe.451studios.com/create-checkout-session', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -482,7 +479,6 @@
         if (result.error) {
           alert(result.error.message);
         }
-        */
       } catch (error) {
         console.error('Error:', error);
         alert('Unable to start checkout. Please email us at max451studios@gmail.com');

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Link Generator | 451 Studios</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #081018;
+      --surface: #101926;
+      --surface-2: #152132;
+      --border: #223147;
+      --text: #edf3ff;
+      --muted: #9fb0cb;
+      --accent: #70a7ff;
+      --accent-2: #8b7dff;
+      --green: #58d68d;
+      --red: #e74c3c;
+      --shadow: 0 14px 40px rgba(0,0,0,.28);
+      --max: 1000px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top left, rgba(112,167,255,.14), transparent 26%), linear-gradient(180deg, #081018 0%, #0c1420 100%);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .app-card {
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      max-width: var(--max);
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: .94rem;
+      margin-bottom: 28px;
+    }
+    .app-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 820px) {
+      .app-grid { grid-template-columns: 1fr; }
+      .app-card { padding: 24px; }
+    }
+    
+    label {
+      display: block;
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color .2s;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(112,167,255,.15);
+    }
+    input::placeholder, textarea::placeholder { color: #3a4b62; }
+    textarea { resize: vertical; min-height: 80px; }
+    .form-group { margin-bottom: 18px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+    
+    .input-with-symbol {
+      position: relative;
+    }
+    .input-with-symbol .symbol {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .input-with-symbol input {
+      padding-left: 28px;
+    }
+    
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 24px; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text); font-weight: 600; transition: .18s ease;
+      cursor: pointer; font-size: 1rem; width: 100%;
+    }
+    .button:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none; color: white;
+      box-shadow: 0 10px 24px rgba(112,167,255,.22);
+    }
+    .button.primary:disabled {
+      opacity: .5; cursor: not-allowed;
+      transform: none;
+    }
+    .button.green {
+      background: linear-gradient(135deg, #58d68d, #2ecc71);
+      border: none; color: #081018;
+      box-shadow: 0 10px 24px rgba(88,214,141,.22);
+    }
+    
+    /* Result Panel */
+    .result-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+    .result-panel h3 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .result-panel h3 .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.idle { background: var(--muted); }
+    .status-dot.loading { background: #f1c40f; animation: pulse 1s infinite; }
+    .status-dot.success { background: var(--green); }
+    .status-dot.error { background: var(--red); }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+    
+    .payment-link-display {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 16px 0;
+      word-break: break-all;
+    }
+    .payment-link-display .link-text {
+      flex: 1;
+      font-size: .88rem;
+      color: var(--accent);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .copy-btn {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: .82rem;
+      transition: .15s;
+    }
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .copy-btn.copied {
+      background: var(--green);
+      color: #081018;
+      border-color: var(--green);
+    }
+    
+    /* Preview */
+    .preview-box {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      margin-top: auto;
+      color: #1a1a2e;
+    }
+    .preview-box .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .preview-box .preview-amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+    .preview-box .preview-business {
+      font-size: .9rem;
+      color: #6b7280;
+    }
+    .preview-box .preview-desc {
+      font-size: .88rem;
+      color: #4b5563;
+      margin: 8px 0 16px;
+    }
+    .preview-box .preview-customer {
+      font-size: .82rem;
+      color: #9ca3af;
+    }
+    .preview-box .preview-pay-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #5469d4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .preview-box .preview-pay-btn::after {
+      content: 'Pay Now';
+    }
+    .preview-box .preview-secure {
+      text-align: center;
+      font-size: .74rem;
+      color: #9ca3af;
+      margin-top: 10px;
+    }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      color: var(--muted);
+      text-align: center;
+      gap: 8px;
+    }
+    .empty-state .icon { font-size: 2.5rem; opacity: .5; }
+    .empty-state p { font-size: .88rem; max-width: 240px; }
+    
+    .error-msg {
+      color: var(--red);
+      font-size: .88rem;
+      margin-top: 8px;
+    }
+    .success-msg {
+      color: var(--green);
+      font-size: .88rem;
+      margin-top: 8px;
+    }
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.2);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .server-info {
+      margin-top: 20px;
+      padding: 14px;
+      background: rgba(112,167,255,.06);
+      border: 1px solid rgba(112,167,255,.12);
+      border-radius: 10px;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+    .server-info code {
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: .8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+      <h1>💳 Payment Link Generator</h1>
+      <a href="/tools/payment-link.html" style="color:var(--muted);font-size:.85rem;">← Product page</a>
+    </div>
+    <p class="subtitle">Generate a Stripe payment link in seconds. Text or email it to your customer.</p>
+    
+    <div class="app-grid">
+      <!-- Left: Form -->
+      <div>
+        <div class="form-group">
+          <label for="businessName">Your Business Name</label>
+          <input type="text" id="businessName" placeholder="e.g. Smith Plumbing" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="customerName">Customer Name</label>
+            <input type="text" id="customerName" placeholder="e.g. John Doe" />
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount ($)</label>
+            <div class="input-with-symbol">
+              <span class="symbol">$</span>
+              <input type="number" id="amount" placeholder="0.00" step="0.01" min="0.50" />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" placeholder="What are they paying for? e.g. Water heater repair — labor and parts"></textarea>
+        </div>
+        
+        <button class="button primary" id="generateBtn" onclick="generateLink()">
+          🔗 Generate Payment Link
+        </button>
+        
+        <div id="statusMsg" style="margin-top:8px;"></div>
+        
+        <div class="server-info">
+          <strong>🔧 Developer Note:</strong> This tool requires a backend endpoint at <code>/api/create-payment-link</code> 
+          to create real Stripe Payment Links. See <a href="/tools/payment-link.html" style="color:var(--accent);">product page</a> 
+          for setup instructions. In demo mode, a simulated link is generated.
+        </div>
+      </div>
+      
+      <!-- Right: Result/Preview -->
+      <div class="result-panel" id="resultPanel">
+        <h3>
+          <span class="status-dot idle" id="statusDot"></span>
+          <span id="resultTitle">Ready</span>
+        </h3>
+        
+        <div id="resultContent">
+          <div class="empty-state">
+            <div class="icon">🔗</div>
+            <p>Fill in the details and click "Generate" to create a payment link.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Configuration — update these for production
+    const CONFIG = {
+      // Backend API base — points to the stripe subdomain
+      apiBase: 'https://451studios-stripe.451studios.com/api',
+      // Stripe Publishable Key (for future direct integration)
+      stripePublishableKey: 'pk_live_51TNGZjKCitPJBfMMK4h4l8Hl1JXe5q4H8W7Y3l8Y3m4v6Q9z8L2k5f7w8Y9q3v6X9w8L2k5f7w8Y9q3v',
+      // Demo mode: generates simulated links when no backend is available
+      // Set to false when stripe-server.js is running
+      demoMode: false
+    };
+
+    function $(id) { return document.getElementById(id); }
+    
+    function setStatus(type, msg) {
+      const el = $('statusMsg');
+      el.className = type ? type + '-msg' : '';
+      el.textContent = msg || '';
+    }
+    
+    function setResultState(state, title) {
+      $('statusDot').className = 'status-dot ' + state;
+      $('resultTitle').textContent = title || 'Ready';
+    }
+    
+    async function generateLink() {
+      const businessName = $('businessName').value.trim();
+      const customerName = $('customerName').value.trim();
+      const amount = parseFloat($('amount').value);
+      const description = $('description').value.trim();
+      
+      // Validation
+      if (!businessName) { setStatus('error', 'Please enter your business name.'); return; }
+      if (!customerName) { setStatus('error', 'Please enter the customer name.'); return; }
+      if (!amount || amount < 0.50) { setStatus('error', 'Please enter an amount (min $0.50).'); return; }
+      if (!description) { setStatus('error', 'Please enter a description.'); return; }
+      
+      setStatus('', '');
+      setResultState('loading', 'Generating link...');
+      
+      const resultContent = $('resultContent');
+      resultContent.innerHTML = '<div class="empty-state"><div class="spinner"></div><p>Creating your Stripe payment link...</p></div>';
+      
+      const btn = $('generateBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Generating...';
+      
+      try {
+        let paymentLink;
+        
+        if (CONFIG.demoMode) {
+          // Demo mode: simulate a Stripe Payment Link
+          await new Promise(r => setTimeout(r, 1200));
+          
+          // Generate a realistic-looking demo link
+          const sessionId = 'cs_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+          paymentLink = 'https://checkout.stripe.com/c/pay/' + sessionId;
+          
+          setResultState('success', '✅ Payment link generated');
+          showResult(businessName, customerName, amount, description, paymentLink);
+          setStatus('success', 'Link generated! (Demo mode — deploy backend for live Stripe links)');
+        } else {
+          // Production: call the backend
+          const response = await fetch(CONFIG.apiBase + '/create-payment-link', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              businessName,
+              customerName,
+              amount: Math.round(amount * 100), // convert to cents
+              description,
+              successUrl: window.location.origin + '/tools/payment-link-success.html',
+              cancelUrl: window.location.origin + '/tools/payment-link-app.html'
+            })
+          });
+          
+          if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || 'Failed to create link');
+          }
+          
+          const data = await response.json();
+          paymentLink = data.url || data.paymentLink;
+          
+          setResultState('success', '✅ Payment link generated');
+          showResult(businessName, customerName, amount, description, paymentLink);
+          setStatus('success', 'Link created! Copy and send it to your customer.');
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        setResultState('error', '❌ Something went wrong');
+        resultContent.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">⚠️</div>
+            <p>Couldn't generate the link: ${err.message}</p>
+            <p style="font-size:.82rem;margin-top:8px;">Try again or deploy the backend endpoint.</p>
+          </div>
+        `;
+        setStatus('error', err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔗 Generate Payment Link';
+      }
+    }
+    
+    function showResult(businessName, customerName, amount, description, paymentLink) {
+      const resultContent = $('resultContent');
+      const formattedAmount = '$' + amount.toFixed(2);
+      
+      resultContent.innerHTML = `
+        <div class="payment-link-display">
+          <span class="link-text" id="linkText">${paymentLink}</span>
+          <button class="copy-btn" id="copyBtn" onclick="copyLink()">📋 Copy</button>
+        </div>
+        
+        <div style="margin-top:12px;color:var(--muted);font-size:.85rem;display:flex;gap:16px;flex-wrap:wrap;">
+          <span>📤 <strong>Send via:</strong></span>
+          <a href="mailto:?subject=Payment for ${encodeURIComponent(description)}&body=Hi ${encodeURIComponent(customerName)},%0D%0A%0D%0AHere is your payment link for ${encodeURIComponent(description)}:%0D%0A${encodeURIComponent(paymentLink)}%0D%0A%0D%0AThank you,%0D%0A${encodeURIComponent(businessName)}" 
+             style="color:var(--accent);">✉️ Email</a>
+          <span style="color:var(--muted);">or</span>
+          <span style="color:var(--accent);cursor:pointer;" onclick="copyForText()">💬 Copy for Text</span>
+        </div>
+        
+        <div class="preview-box" style="margin-top:16px;">
+          <div class="preview-header">
+            <div>
+              <div class="preview-business">${escapeHtml(businessName)}</div>
+              <div class="preview-desc">${escapeHtml(description)}</div>
+              <div class="preview-customer">Customer: ${escapeHtml(customerName)}</div>
+            </div>
+            <div class="preview-amount">${formattedAmount}</div>
+          </div>
+          <div class="preview-pay-btn"></div>
+          <div class="preview-secure">🔒 Powered by Stripe · Secure checkout</div>
+        </div>
+      `;
+    }
+    
+    function copyLink() {
+      const linkText = document.getElementById('linkText');
+      const copyBtn = document.getElementById('copyBtn');
+      
+      if (!linkText) return;
+      
+      // Use the modern clipboard API
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(linkText.textContent).then(() => {
+          copyBtn.textContent = '✅ Copied!';
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            copyBtn.textContent = '📋 Copy';
+            copyBtn.classList.remove('copied');
+          }, 2500);
+        });
+      } else {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = linkText.textContent;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        copyBtn.textContent = '✅ Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => {
+          copyBtn.textContent = '📋 Copy';
+          copyBtn.classList.remove('copied');
+        }, 2500);
+      }
+    }
+    
+    function copyForText() {
+      const linkText = document.getElementById('linkText');
+      if (!linkText) return;
+      const msg = `Hi, here's your payment link: ${linkText.textContent}`;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(msg).then(() => {
+          const copyBtn = document.getElementById('copyBtn');
+          copyBtn.textContent = '✅ Copied!';
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            copyBtn.textContent = '📋 Copy';
+            copyBtn.classList.remove('copied');
+          }, 2500);
+        });
+      }
+    }
+    
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
