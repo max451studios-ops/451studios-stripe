@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Publish Reviews — 451 Studios</title>
+  <link rel="icon" type="image/svg+xml" href="https://451studios.com/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0b;
+      color: #e4e4e7;
+      line-height: 1.6;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .nav a { color: #a1a1aa; text-decoration: none; font-size: 0.9rem; }
+    .nav a:hover { color: #fff; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .logo { font-weight: 700; font-size: 1.2rem; color: #fff; }
+    .logo span { color: #a855f7; }
+
+    .hero {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #a1a1aa;
+      max-width: 650px;
+      margin: 0 auto 2rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(168,85,247,0.15);
+      color: #c084fc;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .pricing-card {
+      display: inline-block;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .price { font-size: 3rem; font-weight: 800; }
+    .price span { font-size: 1rem; color: #a1a1aa; font-weight: 400; }
+    .price-sub { color: #71717a; font-size: 0.9rem; margin-top: 0.3rem; }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e4e4e7;
+      margin-left: 0.5rem;
+    }
+    .btn-outline:hover { border-color: #7c3aed; }
+
+    .features {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .feature {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .feature .icon { font-size: 2rem; margin-bottom: 0.8rem; }
+    .feature h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+    .feature p { font-size: 0.85rem; color: #a1a1aa; }
+
+    .how-it-works {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+    .how-it-works h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      color: #c084fc;
+    }
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: rgba(168,85,247,0.15);
+      color: #c084fc;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .step h3 { margin-bottom: 0.3rem; font-size: 1rem; }
+    .step p { color: #a1a1aa; font-size: 0.9rem; }
+
+    .platform-logos {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin: 2rem 0;
+      font-size: 1.1rem;
+    }
+    .platform-logos span {
+      background: rgba(255,255,255,0.04);
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #52525b;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .features { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2rem; }
+      .pricing-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><span>◆</span> 451 Studios</div>
+    <div class="nav-links">
+      <a href="https://451studios.com/tools/">All Tools</a>
+      <a href="https://451studios.com">Home</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">Marketing OS Module</div>
+    <h1>Auto-Publish Reviews to Google &amp; Yelp</h1>
+    <p>Every 4-5 star review you collect gets an AI-crafted response posted to Google Business Profile automatically. Yelp draft ready for one-click posting. Reviews build SEO, trust, and new business — on autopilot.</p>
+    
+    <div class="platform-logos">
+      <span>Google Business Profile</span>
+      <span>Yelp</span>
+      <span>Facebook</span>
+    </div>
+
+    <div class="pricing-card">
+      <div class="price">$12<span>/month</span></div>
+      <div class="price-sub">or $29/mo as part of the full Marketing OS</div>
+      <a href="https://451studios-stripe.451studios.com/checkout?price=auto-publish&mode=monthly" class="btn">Subscribe Now</a>
+      <a href="auto-publish-app.html" class="btn btn-outline">Try the Dashboard</a>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <div class="icon">🗣️</div>
+      <h3>AI-Crafted Responses</h3>
+      <p>Every review response is personalized — references specific details from the customer's feedback. Never sounds robotic.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🔗</div>
+      <h3>Google Business Profile</h3>
+      <p>Connect your Google account, set your minimum rating threshold, and replies post automatically. Builds your local SEO.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">✍️</div>
+      <h3>Yelp Drafts</h3>
+      <p>AI generates your Yelp response and delivers it as a ready-to-post draft. One click and it's live on your Yelp page.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">📱</div>
+      <h3>Works with Review SMS</h3>
+      <p>Pair with Review Request SMS for the full loop: collect reviews by text → auto-publish to Google. No manual work.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🎛️</div>
+      <h3>Full Control</h3>
+      <p>Set minimum star rating (only publish 4-5 star reviews), choose which platforms, review before posting.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">📊</div>
+      <h3>Review History</h3>
+      <p>Dashboard shows every review collected, every response generated, and every platform it was published to.</p>
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Customer leaves a review</h3>
+        <p>Via your Review Request SMS campaign, Google listing, or Yelp page. Our system catches 4-5 star reviews automatically.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>AI generates the perfect response</h3>
+        <p>DeepSeek AI crafts a warm, specific reply referencing details from the review. Signed as your business.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>Auto-published to Google</h3>
+        <p>Response posts directly to your Google Business Profile. Boosts local SEO and shows future customers you care.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h3>Yelp draft delivered</h3>
+        <p>Response is ready for you to post on Yelp. Dashboard shows it as a draft — click to copy or open Yelp directly.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    451 Studios — Auto-Publish Reviews Module
+  </footer>
+</body>
+</html>

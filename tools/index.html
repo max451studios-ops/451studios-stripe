@@ -4,11 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Business Tools · 451 Studios — SaaS tools for small business operators</title>
-  <meta name="description" content="Practical SaaS tools for small business owners. Social proof widgets, review response AI, payment links, lead capture, and more. From $9/mo." />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
-  <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
-  <link rel="apple-touch-icon" href="/favicon-64x64.png" />
+  <meta name="description" content="27 practical SaaS tools for small business owners. Social proof, reviews, SMS, payments, workflow, auto service. From $5/mo." />
+  <link rel="icon" href="/logo.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -25,7 +22,7 @@
       --green: #58d68d;
       --orange: #f5a623;
       --shadow: 0 14px 40px rgba(0,0,0,.28);
-      --max: 1180px;
+      --max: 1280px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -38,8 +35,6 @@
     }
     a { color: inherit; text-decoration: none; }
     .container { width: min(100% - 32px, var(--max)); margin: 0 auto; }
-
-    /* Nav */
     header {
       position: sticky; top: 0; z-index: 20;
       backdrop-filter: blur(10px);
@@ -54,8 +49,6 @@
     .brand span { color: var(--accent); }
     .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: .94rem; }
     .nav-links a:hover { color: var(--text); }
-
-    /* Buttons */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       padding: 12px 20px; border-radius: 12px;
@@ -69,16 +62,12 @@
       border: none; color: white;
       box-shadow: 0 10px 24px rgba(112,167,255,.22);
     }
-    .btn.primary:hover { box-shadow: 0 12px 30px rgba(112,167,255,.32); }
     .btn.green {
       background: linear-gradient(135deg, #58d68d, #2ecc71);
       border: none; color: #081018;
       box-shadow: 0 10px 24px rgba(88,214,141,.22);
     }
-    .btn.green:hover { box-shadow: 0 12px 30px rgba(88,214,141,.32); }
     .btn.sm { padding: 8px 14px; font-size: .88rem; }
-
-    /* Hero */
     .hero { padding: 64px 0 36px; text-align: center; }
     .hero h1 {
       font-size: clamp(2rem, 4.5vw, 3.6rem); line-height: 1.08;
@@ -97,16 +86,19 @@
       background: rgba(112,167,255,.08);
       border: 1px solid rgba(112,167,255,.14);
     }
-
-    /* Sections */
     section { padding: 32px 0; }
     .section-head { margin-bottom: 24px; }
     .section-head h2 { font-size: 1.6rem; margin-bottom: 8px; }
     .section-head p { color: var(--muted); max-width: 640px; }
-
-    /* Product Cards */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-
+    .cat-tag {
+      display: inline-block;
+      padding: 4px 12px; border-radius: 999px;
+      font-size: .78rem; font-weight: 600; margin-bottom: 10px;
+    }
+    .cat-tag.extensions { background: rgba(112,167,255,.12); color: #b8d4ff; border: 1px solid rgba(112,167,255,.2); }
+    .cat-tag.general { background: rgba(88,214,141,.12); color: #c6f5d7; border: 1px solid rgba(88,214,141,.2); }
+    .cat-tag.auto { background: rgba(245,166,35,.12); color: #fdebb3; border: 1px solid rgba(245,166,35,.2); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
     .product-card {
       background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
       border: 1px solid var(--border);
@@ -116,31 +108,19 @@
       display: flex; flex-direction: column;
     }
     .product-card:hover { border-color: rgba(112,167,255,.25); transform: translateY(-2px); }
-
     .product-icon { font-size: 2rem; margin-bottom: 12px; }
     .product-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
     .product-desc { color: var(--muted); font-size: .94rem; margin-bottom: 12px; flex: 1; }
-
-    .product-price {
-      display: flex; align-items: baseline; gap: 4px;
-      margin-bottom: 4px;
-    }
+    .product-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
     .product-price .amount { font-size: 1.8rem; font-weight: 800; }
     .product-price .period { color: var(--muted); font-size: .9rem; }
-
     .product-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
-    .tag {
-      padding: 3px 10px; border-radius: 999px;
-      font-size: .78rem; font-weight: 600;
-      background: rgba(88,214,141,.1); color: #c6f5d7;
-      border: 1px solid rgba(88,214,141,.18);
-    }
-    .tag.new { background: rgba(245,166,35,.1); color: #fdebb3; border-color: rgba(245,166,35,.18); }
-    .tag.free { background: rgba(112,167,255,.1); color: #b8d4ff; border-color: rgba(112,167,255,.18); }
-
+    .tag { padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 600; }
+    .tag.live { background: rgba(88,214,141,.1); color: #c6f5d7; border: 1px solid rgba(88,214,141,.18); }
+    .tag.soon { background: rgba(245,166,35,.1); color: #fdebb3; border: 1px solid rgba(245,166,35,.18); }
+    .tag.free { background: rgba(112,167,255,.1); color: #b8d4ff; border: 1px solid rgba(112,167,255,.18); }
+    .tag.badge { background: rgba(139,125,255,.1); color: #cdc4ff; border: 1px solid rgba(139,125,255,.18); }
     .product-actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
-
-    /* Bundle CTA */
     .bundle {
       margin: 40px 0; padding: 32px; border-radius: 24px;
       background: linear-gradient(135deg, rgba(112,167,255,.14), rgba(139,125,255,.1));
@@ -157,11 +137,8 @@
       background: rgba(88,214,141,.12); color: #c6f5d7;
       border: 1px solid rgba(88,214,141,.2); font-size: .88rem; font-weight: 600;
     }
-
-    /* Footer */
     footer { padding: 28px 0 48px; color: var(--muted); text-align: center; font-size: .9rem; }
     footer a:hover { color: var(--accent); }
-
     @media (max-width: 768px) {
       .nav-links { display: none; }
       .grid { grid-template-columns: 1fr; }
@@ -170,172 +147,312 @@
   </style>
 </head>
 <body>
-
 <header>
   <div class="container nav">
     <div class="brand"><a href="/">451 <span>Studios</span> <span style="font-weight:400;color:var(--muted);font-size:.8rem;margin-left:6px;">Tools</span></a></div>
     <nav class="nav-links">
-      <a href="#tools">All Tools</a>
-      <a href="#bundle">Bundle</a>
-      <a href="/">Back to 451 Studios</a>
+      <a href="#extensions">Core</a><a href="#general">General</a><a href="#auto">Auto Service</a><a href="#bundle">Bundle</a><a href="/">Back to 451 Studios</a>
     </nav>
-    <a class="btn primary sm" href="#tools">Pick a Tool</a>
+    <a class="btn primary sm" href="#tools">All Tools</a>
   </div>
 </header>
-
 <main class="container">
-
-  <!-- Hero -->
   <section class="hero">
-    <h1>Business tools that actually pay for themselves.</h1>
-    <p>Practical SaaS tools for small business operators. No bloat, no long contracts, no learning curve. Pick what you need, pay monthly, cancel anytime.</p>
+    <h1>Tools that pay for themselves.</h1>
+    <p>26 practical SaaS tools for small business operators. No bloat, no contracts, no learning curve. Pick what you need — or bundle them all.</p>
     <div class="hero-meta">
       <span>🔧 Built by operators</span>
       <span>💳 Cancel anytime</span>
       <span>⚡ 2-min setup</span>
-      <span>📦 All $9–$19/mo</span>
+      <span>📦 $5–$15/mo</span>
     </div>
   </section>
 
-  <!-- Tool Grid -->
   <section id="tools">
-    <div class="section-head">
-      <h2>Choose your tools</h2>
-      <p>Each tool works standalone. Use one or bundle them all.</p>
+    <!-- ===== EXTENSIONS ===== -->
+    <div id="extensions" class="section-head" style="margin-top:8px;">
+      <span class="cat-tag extensions">🟢 Core Extensions</span>
+      <h2>Extend what you already use</h2>
+      <p>Tools that build on existing workflows — proposals, invoices, reviews, appointments, dashboards.</p>
     </div>
-
     <div class="grid">
-
-      <!-- Social Proof Widget -->
       <div class="product-card">
         <div class="product-icon">📢</div>
         <div class="product-name">Social Proof Widget</div>
-        <div class="product-desc">Show "Someone from [City] just bought [Product]" notifications on your site. Copy-paste one script tag. Works everywhere.</div>
-        <div class="product-price">
-          <span class="amount">$9</span><span class="period">/mo</span>
-        </div>
-        <div class="product-tags">
-          <span class="tag new">Live</span>
-          <span class="tag">Any website</span>
-        </div>
-        <div class="product-actions">
-          <a class="btn primary sm" href="/">Learn More</a>
-          <a class="btn sm" href="/demo.html">Live Demo</a>
-        </div>
+        <div class="product-desc">Show "Someone from [City] just bought [Product]" notifications on your site. One script tag.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag live">Live</span><span class="tag badge">Any site</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/">Learn More</a></div>
       </div>
-
-      <!-- Review Response AI -->
       <div class="product-card">
         <div class="product-icon">⭐</div>
         <div class="product-name">Review Response AI</div>
-        <div class="product-desc">Paste any Google review — we generate 3 response options (professional, friendly, short). Copy and post. Makes you look great in seconds.</div>
-        <div class="product-price">
-          <span class="amount">$12</span><span class="period">/mo</span>
-        </div>
-        <div class="product-tags">
-          <span class="tag new">New</span>
-          <span class="tag">Google Business</span>
-        </div>
-        <div class="product-actions">
-          <a class="btn primary sm" href="/tools/review-response.html">Learn More</a>
-          <a class="btn sm" href="/tools/review-response-app.html">Try It Free</a>
-        </div>
+        <div class="product-desc">Paste any Google review — get 3 AI response drafts. Professional, friendly, or short.</div>
+        <div class="product-price"><span class="amount">$12</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag live">Live</span><span class="tag badge">Google</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/review-response.html">Learn More</a><a class="btn sm" href="/tools/review-response-app.html">Try Free</a></div>
       </div>
-
-      <!-- Invoice-to-Payment Link -->
       <div class="product-card">
         <div class="product-icon">💳</div>
         <div class="product-name">Payment Links</div>
-        <div class="product-desc">Type an amount, get a payment link you can text or email. No account needed on the customer side. Powered by Stripe.</div>
-        <div class="product-price">
-          <span class="amount">$9</span><span class="period">/mo</span>
-        </div>
-        <div class="product-tags">
-          <span class="tag new">New</span>
-          <span class="tag">Stripe</span>
-          <span class="tag">1-click</span>
-        </div>
-        <div class="product-actions">
-          <a class="btn primary sm" href="/tools/payment-link.html">Learn More</a>
-          <a class="btn sm" href="/tools/payment-link-app.html">Try It Free</a>
-        </div>
+        <div class="product-desc">Type an amount, get a Stripe payment link. Text or email it. Customer pays in 1 click.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag live">Live</span><span class="tag badge">Stripe</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/payment-link.html">Learn More</a><a class="btn sm" href="/tools/payment-link-app.html">Try Free</a></div>
       </div>
-
-      <!-- Lead Capture -->
+      <div class="product-card">
+        <div class="product-icon">📱</div>
+        <div class="product-name">Review Request SMS</div>
+        <div class="product-desc">Auto-text customers after service with a link to review you on Google or Yelp. Turn jobs into 5-star reviews.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag live">Live</span><span class="tag badge">SMS</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/review-request-sms.html">Learn More</a><a class="btn sm" href="/tools/review-request-app.html">Open Dashboard</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🗣️</div>
+        <div class="product-name">Auto-Publish Reviews</div>
+        <div class="product-desc">AI-crafted responses posted to Google Business Profile automatically. Yelp drafts ready for one-click. Reviews build SEO on autopilot.</div>
+        <div class="product-price"><span class="amount">$12</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag build">Marketing OS</span><span class="tag badge">Auto</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/auto-publish.html">Learn More</a><a class="btn sm" href="/tools/auto-publish-app.html">Open Dashboard</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🎨</div>
+        <div class="product-name">Ad Creative Generator</div>
+        <div class="product-desc">AI generates ad copy + social graphics for your auto shop. 3 variants per service. Ready to post to Instagram, Facebook, LinkedIn.</div>
+        <div class="product-price"><span class="amount">$15</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag build">Marketing OS</span><span class="tag badge">AI</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/ad-creator.html">Learn More</a><a class="btn sm" href="/tools/ad-creator-app.html">Open Dashboard</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📱</div>
+        <div class="product-name">Social Scheduler</div>
+        <div class="product-desc">AI drafts social posts for your auto shop. Calendar scheduling, image previews, status tracking. 8 service types.</div>
+        <div class="product-price"><span class="amount">$12</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag build">Marketing OS</span><span class="tag badge">AI</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/social-scheduler.html">Learn More</a><a class="btn sm" href="/tools/social-scheduler-app.html">Open Dashboard</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">⭐</div>
+        <div class="product-name">Reputation Monitor</div>
+        <div class="product-desc">Track Google, Facebook, and Yelp reviews in one dashboard. AI response drafts, negative review alerts, CSV export.</div>
+        <div class="product-price"><span class="amount">$15</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag build">Marketing OS</span><span class="tag badge">AI</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/reputation-monitor.html">Learn More</a><a class="btn sm" href="/tools/reputation-monitor-app.html">Open Dashboard</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📊</div>
+        <div class="product-name">Analytics Dashboard</div>
+        <div class="product-desc">See all Marketing OS stats in one view. SMS, reviews, ads, social, reputation — quick module links and data export.</div>
+        <div class="product-price"><span class="amount">$15</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag build">Marketing OS</span><span class="tag badge">Analytics</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/analytics-dashboard.html">Learn More</a><a class="btn sm" href="/tools/analytics-dashboard-app.html">Open Dashboard</a></div>
+      </div>
       <div class="product-card">
         <div class="product-icon">📋</div>
         <div class="product-name">Lead Capture Preview</div>
-        <div class="product-desc">Design a lead form and preview the SMS auto-reply your customer would get. Plan your real automation setup in 30 seconds.</div>
-        <div class="product-price">
-          <span class="amount">$9</span><span class="period">/mo</span>
-        </div>
-        <div class="product-tags">
-          <span class="tag new">New</span>
-          <span class="tag">SMS</span>
-          <span class="tag">Free preview</span>
-        </div>
-        <div class="product-actions">
-          <a class="btn primary sm" href="/tools/lead-capture.html">Learn More</a>
-          <a class="btn sm" href="/tools/lead-capture-app.html">Try It Free</a>
-        </div>
+        <div class="product-desc">Design a lead form and preview SMS auto-reply. Plan your automation in 30 seconds.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag live">Live</span><span class="tag badge">SMS</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/lead-capture.html">Learn More</a><a class="btn sm" href="/tools/lead-capture-app.html">Try Free</a></div>
       </div>
-
-      <!-- Business Health Dashboard (placeholder) -->
-      <div class="product-card" style="opacity:.6;">
-        <div class="product-icon">📊</div>
-        <div class="product-name">Business Dashboard</div>
-        <div class="product-desc">One-page dashboard: unread reviews, new leads, upcoming appointments, revenue snapshot. Coming soon.</div>
-        <div class="product-price">
-          <span class="amount">$19</span><span class="period">/mo</span>
-        </div>
-        <div class="product-tags">
-          <span class="tag">Coming Soon</span>
-        </div>
-        <div class="product-actions">
-          <span class="btn sm" style="opacity:.5;cursor:default;">Coming Soon</span>
-        </div>
-      </div>
-
-      <!-- Smart Inbox (placeholder) -->
-      <div class="product-card" style="opacity:.6;">
+      <div class="product-card">
         <div class="product-icon">📨</div>
         <div class="product-name">Smart Inbox</div>
-        <div class="product-desc">SMS + voicemail transcription + web chat in one feed. One flat fee, no per-seat pricing. Coming soon.</div>
-        <div class="product-price">
-          <span class="amount">$19</span><span class="period">/mo</span>
-        </div>
-        <div class="product-tags">
-          <span class="tag">Coming Soon</span>
-        </div>
-        <div class="product-actions">
-          <span class="btn sm" style="opacity:.5;cursor:default;">Coming Soon</span>
-        </div>
+        <div class="product-desc">SMS + voicemail transcription + web chat in one feed. One flat fee, no per-seat pricing.</div>
+        <div class="product-price"><span class="amount">$15</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/smart-inbox.html">Learn More</a></div>
       </div>
+      <div class="product-card">
+        <div class="product-icon">📊</div>
+        <div class="product-name">Business Dashboard</div>
+        <div class="product-desc">Reviews, leads, appointments, revenue — one page. At a glance. Connected to your tools.</div>
+        <div class="product-price"><span class="amount">$15</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/business-dashboard.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📄</div>
+        <div class="product-name">Proposal Generator</div>
+        <div class="product-desc">Fill in a few fields → polished PDF with an "Approve & Pay" button. Get paid faster.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/proposal-generator.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🧾</div>
+        <div class="product-name">Invoice Generator</div>
+        <div class="product-desc">Itemized invoices with a Pay Now button. Enter line items, send as a Stripe link.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/invoice-generator.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">⭐</div>
+        <div class="product-name">Feedback Collector</div>
+        <div class="product-desc">Post-service SMS surveys. Good reviews go to Google. Bad reviews come to you privately.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/feedback-collector.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📅</div>
+        <div class="product-name">Appointment Reminder AI</div>
+        <div class="product-desc">Auto-text 48h + 24h before appointments. Confirm/reschedule replies. Cuts no-shows by 50%+.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/appointment-reminder.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">💰</div>
+        <div class="product-name">Price Anchor</div>
+        <div class="product-desc">Show your prices next to market averages. One widget. Makes your pricing look fair.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/price-anchor.html">Learn More</a></div>
+      </div>
+    </div>
 
+    <!-- ===== GENERAL ===== -->
+    <div id="general" class="section-head" style="margin-top:32px;">
+      <span class="cat-tag general">🧰 General Business Tools</span>
+      <h2>Run your business smoother</h2>
+      <p>Everyday tools every small business needs. Simple, affordable, no training required.</p>
+    </div>
+    <div class="grid">
+      <div class="product-card">
+        <div class="product-icon">🕐</div><div class="product-name">Business Hours Manager</div>
+        <div class="product-desc">Manage hours across locations. Holidays, emergencies, seasonal — update once, sync everywhere.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/hours-manager.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📋</div><div class="product-name">Waitlist Pro</div>
+        <div class="product-desc">Digital waitlist with SMS notifications. Join by QR code or text. No app needed.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/waitlist-pro.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📝</div><div class="product-name">Simple Contract Builder</div>
+        <div class="product-desc">Choose a template, fill blanks, send for e-signature. SOWs, NDAs, service agreements.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/contract-builder.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📸</div><div class="product-name">Receipt Scanner → Bookkeeping</div>
+        <div class="product-desc">Snap a receipt. AI reads vendor, date, amount, category. Export CSV for your bookkeeper.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/receipt-scanner.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🔍</div><div class="product-name">SEO Meta Tag Generator</div>
+        <div class="product-desc">Enter URL + keywords. Get optimized title, meta description, and OG tags. Copy-paste.</div>
+        <div class="product-price"><span class="amount">$5</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/seo-meta-generator.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📱</div><div class="product-name">Social Post Scheduler Lite</div>
+        <div class="product-desc">Draft & schedule 10 posts/mo across LinkedIn, Facebook, X. Simple calendar, no bloat.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/social-scheduler.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">👁️</div><div class="product-name">Reputation Monitor</div>
+        <div class="product-desc">Get alerted when your business is mentioned online. Google, Yelp, social, news.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/reputation-monitor.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📄</div><div class="product-name">Estimate-to-Invoice Converter</div>
+        <div class="product-desc">Photo of a hand-written estimate → itemized invoice with Pay Now button. Stop retyping.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/estimate-invoice.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🎨</div><div class="product-name">Logo + Brand Kit Generator</div>
+        <div class="product-desc">Logo (PNG+SVG), color palette, font pairing. One-time purchase. Look legit from day one.</div>
+        <div class="product-price"><span class="amount">$15</span><span class="period"> one-time</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/brand-kit.html">Learn More</a></div>
+      </div>
+    </div>
+
+    <!-- ===== AUTO ===== -->
+    <div id="auto" class="section-head" style="margin-top:32px;">
+      <span class="cat-tag auto">🚗 Auto Service Niche</span>
+      <h2>Built for repair shops</h2>
+      <p>Tools purpose-built for body shops, mechanics, detailers, PDR, and mobile techs.</p>
+    </div>
+    <div class="grid">
+      <div class="product-card">
+        <div class="product-icon">🚗</div><div class="product-name">VIN Scanner → Info Card</div>
+        <div class="product-desc">Scan or type a VIN. Get a printable vehicle info card. Year, make, model, trim, engine.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/vin-scanner.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">⚖️</div><div class="product-name">Mechanic's Lien Generator</div>
+        <div class="product-desc">State-compliant mechanic's lien PDFs for all 50 states. Protect your labor and parts.</div>
+        <div class="product-price"><span class="amount">$15</span><span class="period"> one-time</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/lien-generator.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🔧</div><div class="product-name">Shop Labor Rate Calculator</div>
+        <div class="product-desc">Enter overhead + margin target. Get suggested rates with regional benchmarks. Price profitably.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/labor-rate-calculator.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🔩</div><div class="product-name">Parts Sourcing Comparer</div>
+        <div class="product-desc">Compare parts prices across NAPA, AutoZone, O'Reilly, RockAuto. Total cost with shipping.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/parts-comparer.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">✅</div><div class="product-name">Inspection Checklist App</div>
+        <div class="product-desc">Digital walk-around checklists. Photos, notes, customer sign-off. Clean PDF, no paper.</div>
+        <div class="product-price"><span class="amount">$7</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/inspection-checklist.html">Learn More</a></div>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">📅</div><div class="product-name">Customer Vehicle Timeline</div>
+        <div class="product-desc">Full service history by VIN. Every visit, repair, estimate. Spot upsells, never ask twice.</div>
+        <div class="product-price"><span class="amount">$9</span><span class="period">/mo</span></div>
+        <div class="product-tags"><span class="tag soon">Coming Soon</span></div>
+        <div class="product-actions"><a class="btn primary sm" href="/tools/vehicle-timeline.html">Learn More</a></div>
+      </div>
     </div>
   </section>
 
-  <!-- Bundle CTA -->
+  <!-- Bundle -->
   <section id="bundle">
     <div class="bundle">
-      <span class="bundle-save">🔥 Save 40%</span>
+      <span class="bundle-save">🔥 Save big</span>
       <h2>Get the full suite</h2>
-      <p>All 4 current tools + early access to everything new. One account, one bill, no surprises.</p>
-      <div class="bundle-price">
-        <span class="old">$39</span>$24<span style="font-size:1rem;font-weight:400;color:var(--muted);">/mo</span>
-      </div>
-      <p style="color:var(--muted);margin-top:8px;font-size:.94rem;">Social Proof + Review AI + Payment Links + Lead Capture</p>
-      <div style="margin-top:16px;">
-        <a class="btn green" href="#contact">Get the Bundle →</a>
-      </div>
+      <p>All 26 tools + early access to everything new. Proposals, inbox, dashboard, reviews, payments — the whole stack. One account, one bill.</p>
+      <div class="bundle-price"><span class="old">$97+</span>$49<span style="font-size:1rem;font-weight:400;color:var(--muted);">/mo</span></div>
+      <p style="color:var(--muted);margin-top:8px;font-size:.94rem;">All 26 tools · New features first · Cancel anytime</p>
+      <div style="margin-top:16px;"><a class="btn green" href="mailto:max451studios@gmail.com?subject=Full%20Suite%20Bundle">Get the Bundle →</a></div>
     </div>
   </section>
 
   <!-- How it works -->
   <section>
-    <div class="section-head">
-      <h2>How it works</h2>
-    </div>
+    <div class="section-head"><h2>How it works</h2></div>
     <div class="grid" style="grid-template-columns:repeat(3,1fr);">
       <div class="product-card" style="text-align:center;">
         <div style="font-size:2.4rem;margin-bottom:8px;">1</div>
@@ -345,7 +462,7 @@
       <div class="product-card" style="text-align:center;">
         <div style="font-size:2.4rem;margin-bottom:8px;">2</div>
         <h3>Use it today</h3>
-        <p style="color:var(--muted);font-size:.94rem;">Copy a script tag, paste a review, or type an amount — results in seconds.</p>
+        <p style="color:var(--muted);font-size:.94rem;">Copy a script tag, paste text, or fill a form — results in seconds.</p>
       </div>
       <div class="product-card" style="text-align:center;">
         <div style="font-size:2.4rem;margin-bottom:8px;">3</div>
@@ -355,19 +472,15 @@
     </div>
   </section>
 
-  <!-- Contact -->
   <section id="contact" style="padding-bottom:48px;">
     <div class="section-head" style="text-align:center;">
       <h2>Get started</h2>
       <p>Email us at <a href="mailto:max451studios@gmail.com" style="color:var(--accent);">max451studios@gmail.com</a> with which tools you want. We'll set you up in minutes.</p>
     </div>
   </section>
-
 </main>
-
 <footer>
-  <a href="/">451 Studios</a> &middot; Tools for operators &middot; <a href="mailto:max451studios@gmail.com">max451studios@gmail.com</a>
+  <a href="/">451 Studios</a> · Tools for operators · <a href="mailto:max451studios@gmail.com">max451studios@gmail.com</a>
 </footer>
-
 </body>
 </html>

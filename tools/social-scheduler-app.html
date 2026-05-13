@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Scheduler — 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c10; --surface: #111318; --surface-2: #161a22; --border: #1f2433;
+      --accent: #4f8ef7; --green: #2ecc71; --yellow: #f39c12; --red: #e74c3c;
+      --text: #e8edf5; --muted: #8892a8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.5;
+    }
+    .app {
+      display: grid; grid-template-columns: 240px 1fr; min-height: 100vh;
+    }
+    .sidebar {
+      background: var(--surface); border-right: 1px solid var(--border);
+      padding: 24px 16px; display: flex; flex-direction: column; gap: 20px;
+    }
+    .sidebar .brand { font-size: .85rem; color: var(--muted); letter-spacing: .06em }
+    .sidebar .brand strong { color: var(--text); display: block; font-size: 1rem; letter-spacing: .03em }
+    .sidebar nav { display: flex; flex-direction: column; gap: 4px }
+    .sidebar nav a {
+      padding: 10px 12px; border-radius: 10px; color: var(--muted);
+      text-decoration: none; font-size: .9rem; transition: .15s; cursor: pointer;
+    }
+    .sidebar nav a:hover, .sidebar nav a.active { background: var(--surface-2); color: var(--text) }
+    .sidebar nav a.active { border-left: 3px solid var(--accent) }
+
+    .main { padding: 24px 32px; overflow-y: auto }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px }
+    .header-row h1 { font-size: 1.3rem; font-weight: 700 }
+    .header-row p { color: var(--muted); font-size: .85rem }
+
+    button, .btn {
+      padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-weight: 600;
+      font-size: .86rem; cursor: pointer; transition: .15s; font-family: inherit;
+    }
+    button:hover { border-color: var(--accent); transform: translateY(-1px) }
+    button.primary { background: var(--accent); border: none; color: white }
+    button.primary:hover { filter: brightness(1.1) }
+    button.green { background: var(--green); border: none; color: #0a0c10 }
+    button.red { background: var(--red); border: none; color: white }
+    button.small { padding: 4px 10px; font-size: .78rem }
+
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px; text-align: center;
+    }
+    .stat-card .num { font-size: 1.5rem; font-weight: 700 }
+    .stat-card .label { font-size: .78rem; color: var(--muted); margin-top: 4px }
+
+    .calendar-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 16px }
+    .calendar-nav h2 { font-size: 1.1rem; min-width: 160px; text-align: center }
+    .calendar-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+      margin-bottom: 24px;
+    }
+    .cal-header { text-align: center; font-size: .75rem; color: var(--muted); padding: 8px 0 }
+    .cal-day {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      min-height: 80px; padding: 6px; font-size: .78rem; cursor: pointer; transition: .1s;
+    }
+    .cal-day:hover { border-color: var(--accent) }
+    .cal-day.other-month { opacity: .3 }
+    .cal-day.today { border-color: var(--accent) }
+    .cal-day .day-num { font-weight: 600; margin-bottom: 4px }
+    .cal-day .post-dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin: 1px;
+    }
+    .cal-day .post-dot.draft { background: var(--yellow) }
+    .cal-day .post-dot.scheduled { background: var(--accent) }
+    .cal-day .post-dot.published { background: var(--green) }
+
+    .tabs { display: flex; gap: 4px; margin-bottom: 16px }
+    .tabs button { border-radius: 10px 10px 0 0; border-bottom: none; font-size: .82rem }
+    .tabs button.active { background: var(--surface-2); border-color: var(--accent); color: var(--accent) }
+
+    .post-list { display: flex; flex-direction: column; gap: 8px }
+    .post-item {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .post-item .info { flex: 1 }
+    .post-item .title { font-weight: 600; font-size: .92rem; margin-bottom: 2px }
+    .post-item .meta { font-size: .78rem; color: var(--muted); display: flex; gap: 8px; align-items: center }
+    .badge {
+      font-size: .7rem; padding: 2px 8px; border-radius: 999px; font-weight: 600;
+    }
+    .badge.draft { background: rgba(243,156,18,.15); color: var(--yellow) }
+    .badge.scheduled { background: rgba(79,142,247,.15); color: var(--accent) }
+    .badge.published { background: rgba(46,204,113,.15); color: var(--green) }
+    .post-actions { display: flex; gap: 6px }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.7);
+      display: flex; align-items: center; justify-content: center; z-index: 100;
+    }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+      padding: 28px; width: min(90%, 580px); max-height: 90vh; overflow-y: auto;
+    }
+    .modal h2 { font-size: 1.1rem; margin-bottom: 16px }
+    .modal label { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 4px; margin-top: 12px }
+    .modal input, .modal select, .modal textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: .9rem; font-family: inherit;
+    }
+    .modal textarea { resize: vertical; min-height: 80px }
+    .modal .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px }
+    .modal .preview-img { width: 100%; border-radius: 12px; margin-top: 12px }
+
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--muted) }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px }
+    .empty-state p { font-size: .92rem; margin-bottom: 16px }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><strong>Social Scheduler</strong>451 Studios</div>
+      <nav>
+        <a class="active" onclick="showView('calendar')">📅 Calendar</a>
+        <a onclick="showView('posts')">📋 All Posts</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="header-row">
+        <div>
+          <h1>Content Calendar</h1>
+          <p>Plan, schedule, and track your auto shop's social posts</p>
+        </div>
+        <button class="primary" onclick="openNewPost()">+ New Post</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card"><div class="num" id="stat-total">0</div><div class="label">Total Posts</div></div>
+        <div class="stat-card"><div class="num" id="stat-drafts">0</div><div class="label">Drafts</div></div>
+        <div class="stat-card"><div class="num" id="stat-scheduled">0</div><div class="label">Scheduled</div></div>
+        <div class="stat-card"><div class="num" id="stat-published">0</div><div class="label">Published</div></div>
+      </div>
+
+      <div id="view-calendar">
+        <div class="calendar-nav">
+          <button onclick="changeMonth(-1)">←</button>
+          <h2 id="cal-month-label"></h2>
+          <button onclick="changeMonth(1)">→</button>
+          <button class="small" onclick="today()" style="margin-left:8px">Today</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+      </div>
+
+      <div id="view-posts" style="display:none">
+        <div class="tabs">
+          <button class="active" onclick="filterPosts('all')">All</button>
+          <button onclick="filterPosts('draft')">Drafts</button>
+          <button onclick="filterPosts('scheduled')">Scheduled</button>
+          <button onclick="filterPosts('published')">Published</button>
+        </div>
+        <div class="post-list" id="post-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- New Post Modal -->
+  <div id="modal-overlay" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <h2 id="modal-title">New Post</h2>
+
+      <label>Service Type</label>
+      <select id="post-service">
+        <option value="crash-repair">Crash Repair</option>
+        <option value="detailing">Detailing</option>
+        <option value="pdr">Paintless Dent Repair</option>
+        <option value="towing">Towing</option>
+        <option value="mobile-mechanic">Mobile Mechanic</option>
+        <option value="auto-glass">Auto Glass</option>
+        <option value="vinyl-wrap">Vinyl Wrap</option>
+        <option value="inspection">Inspection</option>
+      </select>
+
+      <label>Tone</label>
+      <select id="post-tone">
+        <option value="educational">Educational</option>
+        <option value="promotional">Promotional</option>
+        <option value="behind-the-scenes">Behind the Scenes</option>
+        <option value="seasonal">Seasonal</option>
+      </select>
+
+      <label>Publish Date</label>
+      <input type="date" id="post-date">
+
+      <button class="primary" onclick="generatePost()" id="gen-btn" style="margin-top:14px">🤖 Generate with AI</button>
+
+      <label>Headline</label>
+      <input type="text" id="post-headline" placeholder="Your post headline">
+
+      <label>Body</label>
+      <textarea id="post-body" placeholder="Post body text..." rows="4"></textarea>
+
+      <label>Call to Action</label>
+      <input type="text" id="post-cta" placeholder="Call-to-action text">
+
+      <label>Hashtags</label>
+      <input type="text" id="post-hashtags" placeholder="#autorepair #detailing">
+
+      <div id="post-image-preview" style="display:none;margin-top:12px">
+        <img id="preview-img" class="preview-img" alt="Post preview">
+      </div>
+
+      <div class="btn-row">
+        <button onclick="closeModal()">Cancel</button>
+        <button class="green" onclick="savePost('draft')">Save Draft</button>
+        <button class="primary" onclick="savePost('scheduled')">Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = window.location.origin;
+    const STORAGE_KEY = 'ss_posts';
+
+    // In-memory post store (in production this hits the API)
+    let posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let editingId = null;
+    let curMonth, curYear;
+    let currentFilter = 'all';
+
+    const serviceNames = {
+      'crash-repair': 'Crash Repair', 'detailing': 'Detailing', 'pdr': 'Paintless Dent Repair',
+      'towing': 'Towing', 'mobile-mechanic': 'Mobile Mechanic', 'auto-glass': 'Auto Glass',
+      'vinyl-wrap': 'Vinyl Wrap', 'inspection': 'Inspection'
+    };
+
+    function init() {
+      const d = new Date();
+      curMonth = d.getMonth();
+      curYear = d.getFullYear();
+      renderCalendar();
+      renderPosts();
+      updateStats();
+      document.getElementById('post-date').valueAsDate = new Date();
+    }
+
+    function showView(view) {
+      document.getElementById('view-calendar').style.display = view === 'calendar' ? '' : 'none';
+      document.getElementById('view-posts').style.display = view === 'posts' ? '' : 'none';
+      document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function updateStats() {
+      document.getElementById('stat-total').textContent = posts.length;
+      document.getElementById('stat-drafts').textContent = posts.filter(p => p.status === 'draft').length;
+      document.getElementById('stat-scheduled').textContent = posts.filter(p => p.status === 'scheduled').length;
+      document.getElementById('stat-published').textContent = posts.filter(p => p.status === 'published').length;
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendar-grid');
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      document.getElementById('cal-month-label').textContent = months[curMonth] + ' ' + curYear;
+
+      grid.innerHTML = '';
+      ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'cal-header';
+        el.textContent = d;
+        grid.appendChild(el);
+      });
+
+      const firstDay = new Date(curYear, curMonth, 1).getDay();
+      const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+      const today = new Date();
+
+      // Previous month days
+      const prevMonthDays = new Date(curYear, curMonth, 0).getDate();
+      for (let i = firstDay - 1; i >= 0; i--) {
+        const el = document.createElement('div');
+        el.className = 'cal-day other-month';
+        el.innerHTML = `<div class="day-num">${prevMonthDays - i}</div>`;
+        grid.appendChild(el);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const el = document.createElement('div');
+        el.className = 'cal-day';
+        const dateStr = `${curYear}-${String(curMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        if (today.getFullYear() === curYear && today.getMonth() === curMonth && today.getDate() === d) {
+          el.classList.add('today');
+        }
+        let dots = '';
+        const dayPosts = posts.filter(p => p.publishDate === dateStr);
+        dayPosts.forEach(p => {
+          dots += `<span class="post-dot ${p.status}"></span>`;
+        });
+        el.innerHTML = `<div class="day-num">${d}</div>${dots ? `<div>${dots}</div>` : ''}`;
+        el.onclick = () => { document.getElementById('post-date').value = dateStr; openNewPost(); };
+        grid.appendChild(el);
+      }
+      updateStats();
+    }
+
+    function changeMonth(delta) {
+      curMonth += delta;
+      if (curMonth > 11) { curMonth = 0; curYear++ }
+      if (curMonth < 0) { curMonth = 11; curYear-- }
+      renderCalendar();
+    }
+
+    function today() {
+      const d = new Date();
+      curMonth = d.getMonth();
+      curYear = d.getFullYear();
+      renderCalendar();
+    }
+
+    function openNewPost(post) {
+      editingId = null;
+      document.getElementById('modal-title').textContent = 'New Post';
+      if (post) {
+        editingId = post.id;
+        document.getElementById('modal-title').textContent = 'Edit Post';
+        document.getElementById('post-service').value = post.service;
+        document.getElementById('post-tone').value = post.tone;
+        document.getElementById('post-date').value = post.publishDate;
+        document.getElementById('post-headline').value = post.headline;
+        document.getElementById('post-body').value = post.body;
+        document.getElementById('post-cta').value = post.cta;
+        document.getElementById('post-hashtags').value = post.hashtags;
+        if (post.imageUrl) {
+          document.getElementById('post-image-preview').style.display = '';
+          document.getElementById('preview-img').src = post.imageUrl;
+        } else {
+          document.getElementById('post-image-preview').style.display = 'none';
+        }
+      } else {
+        document.getElementById('post-service').value = 'crash-repair';
+        document.getElementById('post-tone').value = 'educational';
+        document.getElementById('post-headline').value = '';
+        document.getElementById('post-body').value = '';
+        document.getElementById('post-cta').value = '';
+        document.getElementById('post-hashtags').value = '';
+        document.getElementById('post-image-preview').style.display = 'none';
+      }
+      document.getElementById('modal-overlay').style.display = '';
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    async function generatePost() {
+      const btn = document.getElementById('gen-btn');
+      btn.textContent = '⏳ Generating...';
+      btn.disabled = true;
+
+      const service = document.getElementById('post-service').value;
+      const tone = document.getElementById('post-tone').value;
+      const date = document.getElementById('post-date').value;
+
+      try {
+        const res = await fetch(API + '/api/social-scheduler/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ service, tone, publishDate: date, shopName: 'Your Shop' })
+        });
+        const data = await res.json();
+        if (data.headline) {
+          document.getElementById('post-headline').value = data.headline;
+          document.getElementById('post-body').value = data.body;
+          document.getElementById('post-cta').value = data.cta;
+          document.getElementById('post-hashtags').value = data.hashtags || '';
+          if (data.imageUrl) {
+            document.getElementById('post-image-preview').style.display = '';
+            document.getElementById('preview-img').src = data.imageUrl;
+          }
+        } else {
+          // Fallback generation if API not running
+          fallbackGenerate(service, tone);
+        }
+      } catch(e) {
+        fallbackGenerate(service, tone);
+      }
+      btn.textContent = '🤖 Generate with AI';
+      btn.disabled = false;
+    }
+
+    function fallbackGenerate(service, tone) {
+      const templates = {
+        'crash-repair': { edu: ['The science behind collision repair','How we restore structural integrity','Why OEM parts matter for your repair'],
+          pro: ['We beat any competitor estimate','$200 off collision repairs this month','PDR vs traditional body work'],
+          bts: ['Behind the repair: a full restoration','From crumpled to showroom ready','A day in the body shop'],
+          sea: ['Winter driving damage? We fix it','Spring cleaning for your car','Road trip season starts here'] },
+        'detailing': { edu: ['The difference between wax and ceramic','Why paint correction matters','Interior detailing 101'],
+          pro: ['50% off full detail package','Get summer-ready for $99','Book online and save'],
+          bts: ['6 hours of transformation','The products we trust','Before and after: full detail'],
+          sea: ['Winter salt removal special','Spring detail package','Summer ceramic coating deal'] },
+        'pdr': { edu: ['How PDR works without paint','Why hail damage is repairable','PDR vs traditional body repair'],
+          pro: ['Hail season special','Mobile PDR — we come to you','$50 off dent repair'],
+          bts: ['The tools of the trade','Dent removal in progress','From a hail storm to perfect'],
+          sea: ['Spring hail checkup','Winter garage dings fixed','Summer road trip prep'] }
+      };
+
+      const serviceTemplates = templates[service] || templates['crash-repair'];
+      const toneTemplates = serviceTemplates[tone] || serviceTemplates['edu'];
+      const headline = toneTemplates[Math.floor(Math.random() * toneTemplates.length)];
+
+      document.getElementById('post-headline').value = headline;
+      document.getElementById('post-body').value = `Your ${serviceNames[service]} experts at 451 Studios are here to help. ${tone === 'promotional' ? 'Limited time offer — don\'t wait!' : tone === 'educational' ? 'Here\'s what you need to know.' : tone === 'behind-the-scenes' ? 'Check out what goes into every job.' : 'Seasonal maintenance keeps your car running.'}`;
+      document.getElementById('post-cta').value = tone === 'promotional' ? 'Book Now' : 'Learn More';
+      document.getElementById('post-hashtags').value = `#${serviceNames[service].replace(/ /g,'')} #autorepair #autobody #451Studios #autoservice`;
+    }
+
+    function savePost(status) {
+      const post = {
+        id: editingId || Date.now().toString(),
+        service: document.getElementById('post-service').value,
+        tone: document.getElementById('post-tone').value,
+        publishDate: document.getElementById('post-date').value,
+        headline: document.getElementById('post-headline').value,
+        body: document.getElementById('post-body').value,
+        cta: document.getElementById('post-cta').value,
+        hashtags: document.getElementById('post-hashtags').value,
+        status: status,
+        createdAt: new Date().toISOString()
+      };
+
+      if (editingId) {
+        const idx = posts.findIndex(p => p.id === editingId);
+        if (idx >= 0) posts[idx] = { ...posts[idx], ...post };
+      } else {
+        posts.push(post);
+      }
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+      closeModal();
+      renderCalendar();
+      renderPosts();
+      updateStats();
+    }
+
+    function deletePost(id) {
+      if (!confirm('Delete this post?')) return;
+      posts = posts.filter(p => p.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+      renderCalendar();
+      renderPosts();
+      updateStats();
+    }
+
+    function markPublished(id) {
+      const p = posts.find(p => p.id === id);
+      if (p) { p.status = 'published'; localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        renderCalendar(); renderPosts(); updateStats(); }
+    }
+
+    function renderPosts() {
+      const list = document.getElementById('post-list');
+      let filtered = posts;
+      if (currentFilter !== 'all') filtered = posts.filter(p => p.status === currentFilter);
+      filtered.sort((a,b) => (a.publishDate || '').localeCompare(b.publishDate || ''));
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">📝</div><p>No ${currentFilter === 'all' ? '' : currentFilter} posts yet. Create your first one!</p><button class="primary" onclick="openNewPost()">+ New Post</button></div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map(p => {
+        const date = p.publishDate ? new Date(p.publishDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No date';
+        return `<div class="post-item">
+          <div class="info">
+            <div class="title">${esc(p.headline) || esc(serviceNames[p.service] || 'Unknown')}</div>
+            <div class="meta">
+              <span>${date}</span>
+              <span>${serviceNames[p.service] || p.service}</span>
+              <span class="badge ${p.status}">${p.status}</span>
+            </div>
+          </div>
+          <div class="post-actions">
+            ${p.status !== 'published' ? `<button class="small green" onclick="markPublished('${p.id}')">✓</button>` : ''}
+            <button class="small" onclick="openNewPost(posts.find(x=>x.id==='${p.id}'))">✏️</button>
+            <button class="small red" onclick="deletePost('${p.id}')">×</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function filterPosts(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      renderPosts();
+    }
+
+    function esc(s) {
+      if (!s) return '';
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    init();
+  </script>
+</body>
+</html>

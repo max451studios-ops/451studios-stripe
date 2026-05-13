@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ad Creator Dashboard — 451 Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0b;
+      color: #e4e4e7;
+      min-height: 100vh;
+    }
+    header {
+      background: #111113;
+      border-bottom: 1px solid #1f1f23;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo { font-weight: 700; color: #fff; }
+    .logo span { color: #f97316; }
+    .header-right { display: flex; gap: 1rem; align-items: center; }
+    .btn-sm {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e4e4e7;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-sm:hover { border-color: #f97316; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .panel-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #71717a;
+      margin-bottom: 1.2rem;
+    }
+
+    .control-group { margin-bottom: 1.2rem; }
+    .control-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #a1a1aa;
+      margin-bottom: 0.4rem;
+    }
+    .control-group select, .control-group input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e4e4e7;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+    .control-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e4e4e7;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .gen-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      color: #fff;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 0.5rem;
+    }
+    .gen-btn:hover { opacity: 0.9; }
+    .gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .variant-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+    .variant-card:hover { border-color: #f97316; }
+    .variant-card.selected {
+      border-color: #f97316;
+      background: rgba(249,115,22,0.06);
+    }
+    .variant-card .headline { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .variant-card .body { font-size: 0.88rem; color: #a1a1aa; line-height: 1.5; margin-bottom: 0.4rem; }
+    .variant-card .cta {
+      display: inline-block;
+      background: rgba(249,115,22,0.15);
+      color: #fb923c;
+      padding: 0.2rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .variant-card .num {
+      position: absolute;
+      top: 0.8rem;
+      right: 0.8rem;
+      font-size: 0.7rem;
+      color: #52525b;
+      font-weight: 700;
+    }
+
+    .preview-box {
+      background: #0F172A;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .preview-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .preview-size-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .preview-size-selector button {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #a1a1aa;
+      padding: 0.4rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .preview-size-selector button.active {
+      border-color: #f97316;
+      color: #fb923c;
+      background: rgba(249,115,22,0.1);
+    }
+
+    .empty-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      color: #52525b;
+      text-align: center;
+      padding: 2rem;
+    }
+    .empty-preview .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-preview p { font-size: 0.9rem; }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 2rem;
+      color: #fb923c;
+      font-size: 0.9rem;
+    }
+    .loading-spinner .spin {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+      font-size: 2rem;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item .service { font-weight: 600; font-size: 0.9rem; }
+    .history-item .tone { font-size: 0.8rem; color: #71717a; }
+    .history-item .time { font-size: 0.75rem; color: #52525b; }
+    .history-item .reuse {
+      background: rgba(255,255,255,0.06);
+      border: none;
+      color: #a1a1aa;
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .history-item .reuse:hover { color: #fb923c; }
+
+    .size-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      color: #71717a;
+      margin-right: 0.3rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #111113;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      display: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .toast.show { display: block; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .container { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><span>◆</span> Ad Creative Generator</div>
+    <div class="header-right">
+      <a href="ad-creator.html" class="btn-sm">Product Page</a>
+      <a href="https://451studios.com/tools/" class="btn-sm">All Tools</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="layout">
+      <!-- Left Column: Controls -->
+      <div>
+        <div class="panel">
+          <div class="panel-title">Create New Ad</div>
+
+          <div class="control-group">
+            <label>Service Type</label>
+            <select id="serviceSelect">
+              <option value="crash-repair">Crash Repair / Auto Body</option>
+              <option value="detailing">Auto Detailing</option>
+              <option value="pdr">Paintless Dent Repair (PDR)</option>
+              <option value="towing">Towing & Roadside</option>
+              <option value="mobile-mechanic">Mobile Mechanic</option>
+              <option value="glass-repair">Auto Glass Repair</option>
+              <option value="vinyl-wrap">Vinyl Wrap & Graphics</option>
+              <option value="inspection">Vehicle Inspection</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>Tone</label>
+            <select id="toneSelect">
+              <option value="professional">Professional — Trustworthy, quality-focused</option>
+              <option value="friendly">Friendly — Warm, community-oriented</option>
+              <option value="urgent">Urgent — Action-driven, limited time</option>
+            </select>
+          </div>
+
+          <button class="gen-btn" id="generateBtn" onclick="generateAds()">🎨 Generate 3 Ad Variants</button>
+        </div>
+
+        <!-- Variants -->
+        <div class="panel" id="variantsPanel" style="display:none;">
+          <div class="panel-title">Ad Variants — Click to preview</div>
+          <div id="variantsList"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Preview + History -->
+      <div>
+        <!-- Preview -->
+        <div class="panel">
+          <div class="panel-title">Preview</div>
+          <div class="preview-size-selector" id="sizeSelector" style="display:none;">
+            <button class="active" data-size="square" onclick="selectSize('square')">Square 1080×1080</button>
+            <button data-size="story" onclick="selectSize('story')">Story 1080×1920</button>
+            <button data-size="link" onclick="selectSize('link')">Link 1200×628</button>
+          </div>
+          <div class="preview-box" id="previewBox">
+            <div class="empty-preview">
+              <div>
+                <div class="icon">🎨</div>
+                <p>Select a service and tone,<br>then generate ad variants.<br>Click a variant to preview it.</p>
+              </div>
+            </div>
+          </div>
+          <div id="previewActions" style="margin-top:1rem;display:none;">
+            <button class="btn-sm" onclick="downloadImage()" style="width:100%;">⬇ Download Image</button>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="panel">
+          <div class="panel-title">Your Ad History</div>
+          <div id="historyList">
+            <div style="color:#52525b;padding:1rem;text-align:center;font-size:0.85rem;">No ads generated yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_BASE = 'https://451studios-stripe.451studios.com';
+    const SERVICE_NAMES = {
+      'crash-repair': 'Crash Repair',
+      'detailing': 'Detailing',
+      'pdr': 'PDR',
+      'towing': 'Towing',
+      'mobile-mechanic': 'Mobile Mechanic',
+      'glass-repair': 'Auto Glass',
+      'vinyl-wrap': 'Vinyl Wrap',
+      'inspection': 'Inspection'
+    };
+
+    let currentResult = null;
+    let selectedVariant = 0;
+    let selectedSize = 'square';
+    let history = JSON.parse(localStorage.getItem('adCreatorHistory') || '[]');
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function renderVariants() {
+      const el = document.getElementById('variantsList');
+      if (!currentResult?.variants) return;
+      
+      el.innerHTML = currentResult.variants.map((v, i) => {
+        const isSelected = i === selectedVariant;
+        return '<div class="variant-card ' + (isSelected ? 'selected' : '') + '" onclick="selectVariant(' + i + ')">' +
+          '<div class="num">#' + (i + 1) + '</div>' +
+          '<div class="headline">' + v.headline + '</div>' +
+          '<div class="body">' + v.body + '</div>' +
+          '<div class="cta">' + v.cta + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function selectVariant(i) {
+      selectedVariant = i;
+      renderVariants();
+      updatePreview();
+    }
+
+    function selectSize(size) {
+      selectedSize = size;
+      document.querySelectorAll('#sizeSelector button').forEach(b => b.classList.remove('active'));
+      document.querySelector('#sizeSelector button[data-size="' + size + '"]').classList.add('active');
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const box = document.getElementById('previewBox');
+      const actions = document.getElementById('previewActions');
+      
+      if (!currentResult?.images) {
+        // If no images (rendering not available), show the copy as text preview
+        const v = currentResult?.variants?.[selectedVariant];
+        if (!v) return;
+        box.innerHTML = '<div style="padding:2rem;text-align:center;">' +
+          '<div style="font-size:1.4rem;font-weight:800;margin-bottom:1rem;">' + v.headline + '</div>' +
+          '<div style="color:#a1a1aa;line-height:1.6;margin-bottom:1rem;">' + v.body + '</div>' +
+          '<div style="display:inline-block;background:rgba(249,115,22,0.15);color:#fb923c;padding:0.4rem 1.2rem;border-radius:999px;font-weight:600;">' + v.cta + '</div>' +
+          '<div style="margin-top:1.5rem;font-size:0.75rem;color:#52525b;">Image rendering not available on this device<br>Download the copy below to use in Canva or Buffer</div>' +
+        '</div>';
+        return;
+      }
+
+      const sizeLabel = selectedSize === 'square' ? 'square' : selectedSize === 'story' ? 'story' : 'link';
+      const maxH = selectedSize === 'story' ? '500px' : '400px';
+      // We serve the image via a data URL or direct path
+      box.innerHTML = '<div style="background:#0F172A;display:flex;justify-content:center;align-items:center;min-height:200px;">' +
+        '<img src="' + currentResult.images[sizeLabel] + '?t=' + Date.now() + '" style="max-width:100%;max-height:' + maxH + ';object-fit:contain;" alt="Ad preview">' +
+      '</div>';
+      
+      actions.style.display = 'block';
+    }
+
+    async function generateAds() {
+      const btn = document.getElementById('generateBtn');
+      const variantsPanel = document.getElementById('variantsPanel');
+      
+      btn.disabled = true;
+      btn.textContent = '⏳ Generating...';
+      
+      const service = document.getElementById('serviceSelect').value;
+      const tone = document.getElementById('toneSelect').value;
+      
+      // Show loading in variants panel
+      variantsPanel.style.display = 'block';
+      document.getElementById('variantsList').innerHTML = '<div class="loading-spinner"><div class="spin">🎨</div><br>Generating ad copy...</div>';
+      
+      try {
+        const res = await fetch(API_BASE + '/api/ad-creator/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ service, tone })
+        });
+        const data = await res.json();
+        
+        currentResult = data;
+        selectedVariant = 0;
+        selectedSize = 'square';
+        
+        renderVariants();
+        updatePreview();
+        document.getElementById('sizeSelector').style.display = 'flex';
+        
+        // Add to history
+        history.push({
+          service,
+          tone,
+          timestamp: data.timestamp || new Date().toISOString(),
+          variantCount: data.variants?.length || 0
+        });
+        localStorage.setItem('adCreatorHistory', JSON.stringify(history));
+        renderHistory();
+        
+        showToast('3 ad variants generated!');
+        
+      } catch (e) {
+        document.getElementById('variantsList').innerHTML = '<div style="color:#ef4444;padding:1rem;">Error: ' + e.message + '</div>';
+        showToast('Error generating ads');
+      }
+      
+      btn.disabled = false;
+      btn.textContent = '🎨 Generate 3 Ad Variants';
+    }
+
+    function downloadImage() {
+      if (!currentResult?.images) {
+        // Fallback: copy text to clipboard
+        const v = currentResult?.variants?.[selectedVariant];
+        if (v) {
+          const text = v.headline + '\n' + v.body + '\n' + v.cta;
+          navigator.clipboard.writeText(text).then(() => showToast('Copy text copied to clipboard')).catch(() => {});
+        }
+        return;
+      }
+      
+      const size = selectedSize;
+      const link = document.createElement('a');
+      link.href = currentResult.images[size] + '?t=' + Date.now();
+      link.download = 'ad-' + size + '-' + currentResult.service + '.png';
+      link.click();
+      showToast('Downloading ' + size + ' image...');
+    }
+
+    function renderHistory() {
+      const el = document.getElementById('historyList');
+      if (history.length === 0) {
+        el.innerHTML = '<div style="color:#52525b;padding:1rem;text-align:center;font-size:0.85rem;">No ads generated yet</div>';
+        return;
+      }
+      el.innerHTML = history.slice().reverse().map((h, i) => {
+        const date = new Date(h.timestamp);
+        const timeStr = date.toLocaleString();
+        return '<div class="history-item">' +
+          '<div>' +
+            '<div class="service">' + (SERVICE_NAMES[h.service] || h.service) + '</div>' +
+            '<div class="tone">' + h.tone + ' · ' + h.variantCount + ' variants</div>' +
+            '<div class="time">' + timeStr + '</div>' +
+          '</div>' +
+          '<button class="reuse" onclick="reuseAd(\'' + h.service + '\',\'' + h.tone + '\')">Reuse</button>' +
+        '</div>';
+      }).join('');
+    }
+
+    function reuseAd(service, tone) {
+      document.getElementById('serviceSelect').value = service;
+      document.getElementById('toneSelect').value = tone;
+      showToast('Settings applied — generate away!');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderHistory();
+  </script>
+</body>
+</html>

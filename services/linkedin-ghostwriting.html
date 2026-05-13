@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Ghostwriting — 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --surface-2: #161a22; --border: #1f2433; --accent: #4f8ef7; --green: #2ecc71; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55 }
+    .container { width: min(100% - 32px, 1100px); margin: 0 auto }
+    header { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: rgba(10,12,16,.8); border-bottom: 1px solid rgba(255,255,255,.06) }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 12px }
+    .brand { font-weight: 800; letter-spacing: .05em; text-decoration: none; color: var(--text); }
+    .brand span { color: var(--accent) }
+    a.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 600; transition: .18s; cursor: pointer; font-size: .94rem; text-decoration: none }
+    a.btn:hover { transform: translateY(-1px); border-color: var(--accent) }
+    a.btn.primary { background: linear-gradient(135deg, var(--accent), #6366f1); border: none; color: white; box-shadow: 0 10px 24px rgba(79,142,247,.22) }
+    a.btn.green { background: linear-gradient(135deg, #58d68d, #2ecc71); border: none; color: #0a0c10 }
+    .hero { padding: 64px 0 32px; max-width: 780px }
+    .hero h1 { font-size: clamp(2.2rem,4vw,3.4rem); line-height: 1.08; margin-bottom: 16px; letter-spacing: -.03em }
+    .hero p { color: var(--muted); font-size: 1.05rem; margin-bottom: 20px }
+    .hero .stats { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap }
+    .hero .stats .stat strong { color: var(--text); font-size: 1.1rem; display: block }
+    section { padding: 28px 0 }
+    h2 { font-size: 1.4rem; margin-bottom: 16px }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px }
+    .card .icon { font-size: 1.6rem; margin-bottom: 8px }
+    .card h3 { font-size: 1rem; margin-bottom: 6px }
+    .card p { color: var(--muted); font-size: .88rem; line-height: 1.45 }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+    .pricing-card { text-align: center; padding: 28px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px }
+    .pricing-card.featured { border-color: var(--accent); background: linear-gradient(135deg, rgba(79,142,247,.1), rgba(99,102,241,.06)) }
+    .pricing-card .price { font-size: 2.2rem; font-weight: 800; margin: 8px 0 }
+    .pricing-card .price span { font-size: .9rem; color: var(--muted); font-weight: 400 }
+    .pricing-card ul { list-style: none; padding: 0; margin: 16px 0; text-align: left }
+    .pricing-card li { padding: 5px 0; color: var(--muted); font-size: .85rem }
+    .pricing-card li::before { content: "✓ "; color: var(--green) }
+    .process { display: grid; gap: 10px; max-width: 700px }
+    .step { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 14px 18px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06) }
+    .step strong { display: block; font-size: .95rem }
+    .step span { color: var(--muted); font-size: .85rem }
+    .sample-post { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin: 12px 0; font-size: .9rem; line-height: 1.45 }
+    .sample-post .meta { color: var(--muted); font-size: .75rem; margin-bottom: 6px; display: flex; gap: 12px }
+    .sample-post .name { font-weight: 700; color: var(--text) }
+    .sample-post .text { margin-top: 8px }
+    .sample-post .stats { color: var(--muted); font-size: .78rem; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 8px }
+    .cta-block { margin: 28px 0 48px; padding: 28px; border-radius: 20px; background: linear-gradient(135deg, rgba(79,142,247,.14), rgba(99,102,241,.1)); border: 1px solid rgba(79,142,247,.16); display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap }
+    footer { padding: 28px 0 48px; color: var(--muted); text-align: center; font-size: .88rem }
+    @media (max-width: 860px) { .grid-3, .pricing-grid { grid-template-columns: 1fr } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="/">451 <span>Studios</span></a>
+      <a class="btn primary" href="#pricing">Get Started</a>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h1>LinkedIn content that sounds like you. Delivered every week.</h1>
+      <p>We write 3-5 LinkedIn posts per week in your voice. AI-assisted, human-edited, founder-approved. Consistent thought leadership without the time commitment.</p>
+      <div class="stats">
+        <div class="stat"><strong>3-5</strong> posts/week</div>
+        <div class="stat"><strong>$800</strong> starting/mo</div>
+        <div class="stat"><strong>AI + Human</strong> editing</div>
+        <div class="stat"><strong>24h</strong> weekly review</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <div class="process" style="max-width:650px">
+        <div class="step"><strong>1. Voice Intake</strong><span>You fill out a one-time questionnaire about your voice, topics, and opinions. We read your existing content to match your style.</span></div>
+        <div class="step"><strong>2. Weekly Topic Planning</strong><span>We propose 5-7 topics based on your industry, trends, and conversations. You pick the ones that resonate.</span></div>
+        <div class="step"><strong>3. AI Drafting + Human Edit</strong><span>DeepSeek drafts each post. We edit for voice, clarity, and impact. You never see AI-generated garbage.</span></div>
+        <div class="step"><strong>4. Weekly Batch Review</strong><span>Monday morning, we send you next week's batch. Approve, tweak, or reject. Takes 10 minutes.</span></div>
+        <div class="step"><strong>5. Schedule &amp; Publish</strong><span>Post schedule set: Mon/Wed/Fri (or your preference). We handle timing, hashtags, and engagement monitoring.</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>What posting consistently does</h2>
+      <div class="grid-3">
+        <div class="card"><div class="icon">📈</div><h3>3-5x More Impressions</h3><p>Users who post 3-5x/week get exponentially more reach than weekly posters. The algorithm rewards consistency.</p></div>
+        <div class="card"><div class="icon">🤝</div><h3>Inbound Inquiries</h3><p>Founders on LinkedIn consistently report 40%+ of their leads come from content. Your next client is reading your feed.</p></div>
+        <div class="card"><div class="icon">⚡</div><h3>10 Min/Week Input</h3><p>That's all it takes. Monday batch review. The rest is on us — research, drafting, editing, posting, monitoring.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Sample posts from our pipeline</h2>
+      <p style="color:var(--muted);margin-bottom:16px;font-size:.9rem">Real posts generated by our AI pipeline, edited for quality.</p>
+      
+      <div class="sample-post">
+        <div class="meta"><span class="name">Max</span><span>AI Automation Expert</span><span>3d ago</span></div>
+        <div class="text">I stopped checking my email six weeks ago.<br><br>Not pretending — an agent triages, responds, and flags only what needs me.<br><br>Here's the setup (it's simpler than you think):<br><br>1. Filter rules catch the noise (newsletters, receipts, automated alerts)<br>2. AI reads the remaining inbox, categorizes by priority<br>3. Auto-replies to common questions from a template library<br>4. The 2-3 emails/day that genuinely need me hit my Slack<br><br>Most founders spend 2+ hours a day on email. That's 500+ hours a year.<br><br>The ROI math is trivial.</div>
+        <div class="stats">2,418 impressions · 84 engagements</div>
+      </div>
+
+      <div class="sample-post">
+        <div class="meta"><span class="name">Max</span><span>AI Automation Expert</span><span>1w ago</span></div>
+        <div class="text">The difference between a chatbot and an AI agent:<br><br>One waits for you to ask. The other just does the work.<br><br>Chatbot: "How can I help you today?"<br>Agent: "I noticed your CRM data is stale. Here's a cleaned file with 47 duplicate contacts merged. No action needed from you."<br><br>Most businesses don't need better chatbots. They need agents that execute without hand-holding.</div>
+        <div class="stats">3,512 impressions · 127 engagements</div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2 style="text-align:center">Simple monthly retainer</h2>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Starter</h3>
+          <div class="price">$800<span>/mo</span></div>
+          <ul>
+            <li>3 posts per week (12/mo)</li>
+            <li>Voice training included</li>
+            <li>Monday batch review</li>
+            <li>Auto-scheduled publishing</li>
+            <li>Monthly performance report</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Get Started</a>
+        </div>
+        <div class="pricing-card featured">
+          <h3>Growth</h3>
+          <div class="price">$1,200<span>/mo</span></div>
+          <ul>
+            <li>5 posts per week (20/mo)</li>
+            <li>Everything in Starter</li>
+            <li>Topic strategy &amp; planning</li>
+            <li>Engagement reply drafts</li>
+            <li>Weekly strategy call</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Get Started</a>
+        </div>
+        <div class="pricing-card">
+          <h3>Premium</h3>
+          <div class="price">$1,800<span>/mo</span></div>
+          <ul>
+            <li>5 posts per week + DM outreach</li>
+            <li>Everything in Growth</li>
+            <li>Inbox management</li>
+            <li>Outreach sequence drafting</li>
+            <li>Dedicated Slack channel</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Contact Us</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-block">
+      <div><strong style="font-size:1.1rem">Ready to own LinkedIn?</strong><br><span style="color:var(--muted)">Book a 15-minute call. We'll audit your current content and show you what 3 months of consistency looks like.</span></div>
+      <a class="btn green" href="#">Book a Call →</a>
+    </div>
+  </main>
+  <footer><div class="container">451 Studios — LinkedIn Ghostwriting Service</div></footer>
+</body>
+</html>

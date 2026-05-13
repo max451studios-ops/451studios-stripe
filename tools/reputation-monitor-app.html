@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reputation Monitor — 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --surface-2: #161a22; --border: #1f2433; --accent: #4f8ef7; --green: #2ecc71; --yellow: #f39c12; --red: #e74c3c; --orange: #e67e22; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5 }
+    .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh }
+    .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; gap: 20px }
+    .sidebar .brand { font-size: .85rem; color: var(--muted); letter-spacing: .06em }
+    .sidebar .brand strong { color: var(--text); display: block; font-size: 1rem; letter-spacing: .03em }
+    .main { padding: 24px 32px; overflow-y: auto }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px }
+    .header-row h1 { font-size: 1.3rem; font-weight: 700 }
+    .header-row p { color: var(--muted); font-size: .85rem }
+    button, .btn { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 600; font-size: .86rem; cursor: pointer; transition: .15s; font-family: inherit }
+    button:hover { border-color: var(--accent); transform: translateY(-1px) }
+    button.primary { background: var(--accent); border: none; color: white }
+    button.primary:hover { filter: brightness(1.1) }
+    button.green { background: var(--green); border: none; color: #0a0c10 }
+    button.red { background: var(--red); border: none; color: white }
+    button.small { padding: 4px 10px; font-size: .78rem }
+    button.orange { background: var(--orange); border: none; color: white }
+
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: center }
+    .stat-card .num { font-size: 1.5rem; font-weight: 700 }
+    .stat-card .label { font-size: .78rem; color: var(--muted); margin-top: 4px }
+    .stat-card .sub { font-size: .75rem; margin-top: 2px }
+
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center }
+    .filter-bar select { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: inherit; font-size: .82rem }
+
+    .review-list { display: flex; flex-direction: column; gap: 8px }
+    .review-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; transition: .1s }
+    .review-item.flagged { border-color: rgba(231,76,60,.4); background: rgba(231,76,60,.05) }
+    .review-item .top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px }
+    .review-item .platform { font-size: .75rem; padding: 2px 8px; border-radius: 999px; font-weight: 600 }
+    .review-item .platform.google { background: rgba(79,142,247,.15); color: var(--accent) }
+    .review-item .platform.facebook { background: rgba(59,89,152,.2); color: #8ba4d4 }
+    .review-item .platform.yelp { background: rgba(217,62,47,.15); color: #e87364 }
+    .review-item .platform.manual { background: rgba(255,255,255,.08); color: var(--muted) }
+    .review-item .stars { color: var(--yellow); font-size: .9rem }
+    .review-item .rating-badge { font-weight: 700; font-size: .82rem; margin-left: 6px }
+    .review-item .reviewer { font-weight: 600; font-size: .9rem }
+    .review-item .date { color: var(--muted); font-size: .75rem }
+    .review-item .text { color: var(--muted); font-size: .88rem; margin: 6px 0; line-height: 1.4 }
+    .review-item .actions { display: flex; gap: 6px; margin-top: 8px }
+    .badge { font-size: .7rem; padding: 2px 8px; border-radius: 999px; font-weight: 600 }
+    .badge.responded { background: rgba(46,204,113,.15); color: var(--green) }
+    .badge.pending { background: rgba(243,156,18,.15); color: var(--yellow) }
+
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--muted) }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: center; justify-content: center; z-index: 100 }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; width: min(90%, 580px); max-height: 90vh; overflow-y: auto }
+    .modal h2 { font-size: 1.1rem; margin-bottom: 16px }
+    .modal label { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 4px; margin-top: 12px }
+    .modal input, .modal select, .modal textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: .9rem; font-family: inherit }
+    .modal textarea { resize: vertical; min-height: 80px }
+    .modal .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><strong>Reputation Monitor</strong>451 Studios</div>
+    </aside>
+    <main class="main">
+      <div class="header-row">
+        <div>
+          <h1>Review Dashboard</h1>
+          <p>Track your shop's reputation across every platform</p>
+        </div>
+        <button class="primary" onclick="openImportModal()">+ Import Reviews</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card"><div class="num" id="stat-rating">—</div><div class="label">Avg Rating</div><div class="sub" id="stat-total" style="font-size:.75rem;color:var(--muted)">0 reviews</div></div>
+        <div class="stat-card"><div class="num" id="stat-flagged">0</div><div class="label">Flagged (≤3⭐)</div></div>
+        <div class="stat-card"><div class="num" id="stat-responded">0</div><div class="label">Responded</div></div>
+        <div class="stat-card"><div class="num" id="stat-pending">0</div><div class="label">Needs Response</div></div>
+      </div>
+
+      <div class="filter-bar">
+        <select id="platform-filter" onchange="renderReviews()">
+          <option value="all">All Platforms</option>
+          <option value="google">Google</option>
+          <option value="facebook">Facebook</option>
+          <option value="yelp">Yelp</option>
+          <option value="manual">Manual</option>
+        </select>
+        <select id="status-filter" onchange="renderReviews()">
+          <option value="all">All Status</option>
+          <option value="pending">Needs Response</option>
+          <option value="responded">Responded</option>
+        </select>
+        <select id="rating-filter" onchange="renderReviews()">
+          <option value="all">All Ratings</option>
+          <option value="negative">⭐ Negative (≤3)</option>
+          <option value="positive">⭐⭐⭐⭐ Positive (4-5)</option>
+        </select>
+        <button class="small" onclick="exportCSV()">📤 Export CSV</button>
+      </div>
+
+      <div class="review-list" id="review-list"></div>
+    </main>
+  </div>
+
+  <!-- Import Modal -->
+  <div id="import-modal" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <h2>Import Reviews</h2>
+      <label>Platform</label>
+      <select id="import-platform">
+        <option value="google">Google</option>
+        <option value="facebook">Facebook</option>
+        <option value="yelp">Yelp</option>
+        <option value="manual">Manual Entry</option>
+      </select>
+      <label>Reviewer Name</label>
+      <input type="text" id="import-name" placeholder="e.g. John D.">
+      <label>Rating</label>
+      <select id="import-rating">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+      </select>
+      <label>Review Text</label>
+      <textarea id="import-text" placeholder="Paste the review text..." rows="4"></textarea>
+      <label>Review Date</label>
+      <input type="date" id="import-date">
+      <div class="btn-row">
+        <button onclick="closeImportModal()">Cancel</button>
+        <button class="primary" onclick="importSingleReview()">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Response Modal -->
+  <div id="response-modal" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <h2>Generate Response</h2>
+      <label>Tone</label>
+      <select id="response-tone">
+        <option value="professional">Professional</option>
+        <option value="friendly">Friendly</option>
+        <option value="apologetic">Apologetic (negative review)</option>
+      </select>
+      <label>Review Text</label>
+      <textarea id="response-review-text" rows="3" readonly></textarea>
+      <label>AI-Generated Response</label>
+      <textarea id="response-text" rows="4" placeholder="Click generate..."></textarea>
+      <div class="btn-row">
+        <button onclick="closeResponseModal()">Cancel</button>
+        <button class="primary" onclick="generateResponse()">🤖 Generate</button>
+        <button class="green" onclick="copyResponse()">📋 Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = window.location.origin;
+    const STORAGE_KEY = 'rm_reviews';
+    let reviews = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let responseReviewId = null;
+
+    function init() {
+      renderReviews();
+    }
+
+    function renderReviews() {
+      const platform = document.getElementById('platform-filter').value;
+      const statusF = document.getElementById('status-filter').value;
+      const ratingF = document.getElementById('rating-filter').value;
+
+      let filtered = [...reviews];
+      if (platform !== 'all') filtered = filtered.filter(r => r.platform === platform);
+      if (statusF === 'responded') filtered = filtered.filter(r => r.responded);
+      if (statusF === 'pending') filtered = filtered.filter(r => !r.responded);
+      if (ratingF === 'negative') filtered = filtered.filter(r => parseInt(r.rating) <= 3);
+      if (ratingF === 'positive') filtered = filtered.filter(r => parseInt(r.rating) >= 4);
+
+      filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+      // Update stats
+      updateStats();
+
+      const list = document.getElementById('review-list');
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="icon">⭐</div><p>No reviews yet. Import your first one!</p></div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(r => {
+        const isFlagged = parseInt(r.rating) <= 3;
+        const stars = '★'.repeat(parseInt(r.rating)) + '☆'.repeat(5 - parseInt(r.rating));
+        const date = r.date ? new Date(r.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown';
+        return `<div class="review-item ${isFlagged ? 'flagged' : ''}">
+          <div class="top-row">
+            <div>
+              <span class="platform ${r.platform}">${r.platform.charAt(0).toUpperCase() + r.platform.slice(1)}</span>
+              <span class="stars">${stars}</span>
+              <span class="rating-badge">${r.rating}/5</span>
+            </div>
+            <span class="${r.responded ? 'badge responded' : 'badge pending'}">${r.responded ? '✓ Responded' : 'Needs Response'}</span>
+          </div>
+          <div class="reviewer">${esc(r.reviewerName || 'Anonymous')} · <span class="date">${date}</span></div>
+          <div class="text">${esc(r.text || '')}</div>
+          <div class="actions">
+            ${!r.responded ? `<button class="small orange" onclick="openResponseModal('${r.id}')">💬 Respond</button>` : ''}
+            <button class="small" onclick="toggleResponded('${r.id}')">${r.responded ? '↩ Undo' : '✓ Mark Responded'}</button>
+            <button class="small red" onclick="deleteReview('${r.id}')">×</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function updateStats() {
+      const total = reviews.length;
+      const avg = total > 0 ? (reviews.reduce((s,r) => s + parseInt(r.rating), 0) / total).toFixed(1) : '—';
+      const flagged = reviews.filter(r => parseInt(r.rating) <= 3).length;
+      const responded = reviews.filter(r => r.responded).length;
+      const pending = total - responded;
+
+      document.getElementById('stat-rating').textContent = avg;
+      document.getElementById('stat-total').textContent = total + ' review' + (total !== 1 ? 's' : '');
+      document.getElementById('stat-flagged').textContent = flagged;
+      document.getElementById('stat-responded').textContent = responded;
+      document.getElementById('stat-pending').textContent = pending;
+    }
+
+    function openImportModal() {
+      document.getElementById('import-date').valueAsDate = new Date();
+      document.getElementById('import-modal').style.display = '';
+    }
+    function closeImportModal() {
+      document.getElementById('import-modal').style.display = 'none';
+    }
+    function importSingleReview() {
+      const review = {
+        id: Date.now().toString(),
+        platform: document.getElementById('import-platform').value,
+        reviewerName: document.getElementById('import-name').value || 'Anonymous',
+        rating: document.getElementById('import-rating').value,
+        text: document.getElementById('import-text').value,
+        date: document.getElementById('import-date').value,
+        responded: false,
+        createdAt: new Date().toISOString()
+      };
+      reviews.push(review);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+      closeImportModal();
+      renderReviews();
+    }
+
+    function toggleResponded(id) {
+      const r = reviews.find(x => x.id === id);
+      if (r) { r.responded = !r.responded; localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews)); renderReviews(); }
+    }
+
+    function deleteReview(id) {
+      if (!confirm('Delete this review?')) return;
+      reviews = reviews.filter(r => r.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+      renderReviews();
+    }
+
+    function openResponseModal(id) {
+      const r = reviews.find(x => x.id === id);
+      if (!r) return;
+      responseReviewId = id;
+      document.getElementById('response-review-text').value = r.text || '';
+      document.getElementById('response-text').value = '';
+      document.getElementById('response-modal').style.display = '';
+    }
+
+    function closeResponseModal() {
+      document.getElementById('response-modal').style.display = 'none';
+      responseReviewId = null;
+    }
+
+    async function generateResponse() {
+      const review = reviews.find(r => r.id === responseReviewId);
+      if (!review) return;
+      const tone = document.getElementById('response-tone').value;
+      const btn = document.querySelector('#response-modal .primary');
+      btn.textContent = '⏳ Generating...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(API + '/api/reputation/generate-response', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reviewText: review.text, rating: review.rating, serviceType: 'auto-repair', tone })
+        });
+        const data = await res.json();
+        if (data.response) {
+          document.getElementById('response-text').value = data.response;
+        } else {
+          fallbackResponse(review);
+        }
+      } catch(e) {
+        fallbackResponse(review);
+      }
+      btn.textContent = '🤖 Generate';
+      btn.disabled = false;
+    }
+
+    function fallbackResponse(review) {
+      const rating = parseInt(review.rating);
+      const responses = {
+        5: 'Thank you so much for your kind words! We\'re thrilled you had a great experience with us. Your feedback means the world to our team and we look forward to serving you again!',
+        4: 'Thanks for your review! We\'re glad you had a positive experience. We\'re always working to improve and would love to hear how we could earn that 5th star next time.',
+        3: 'Thank you for your feedback. We appreciate your honest review and would like to learn more about your experience. Please reach out to us directly so we can make things right.',
+        2: 'We\'re sorry to hear about your experience. This isn\'t the standard we strive for. Please contact us directly so we can address your concerns and make things right.',
+        1: 'We sincerely apologize for your experience. This is not the level of service we aim to provide. Please give us a call — we\'d like to speak with you personally to resolve this.'
+      };
+      document.getElementById('response-text').value = responses[rating] || responses[3];
+    }
+
+    function copyResponse() {
+      const text = document.getElementById('response-text').value;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('#response-modal .green');
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 1500);
+      });
+    }
+
+    function exportCSV() {
+      if (reviews.length === 0) return alert('No reviews to export.');
+      let csv = 'Platform,Reviewer,Rating,Text,Date,Responded\n';
+      reviews.forEach(r => {
+        csv += `${r.platform},"${esc(r.reviewerName || '')}",${r.rating},"${esc(r.text || '').replace(/"/g,'""')}",${r.date},${r.responded}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'reviews-export.csv'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function esc(s) {
+      if (!s) return '';
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    init();
+  </script>
+</body>
+</html>

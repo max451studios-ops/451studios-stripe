@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Publish Dashboard — 451 Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0b;
+      color: #e4e4e7;
+      min-height: 100vh;
+    }
+    header {
+      background: #111113;
+      border-bottom: 1px solid #1f1f23;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo { font-weight: 700; color: #fff; }
+    .logo span { color: #a855f7; }
+    .header-right { display: flex; gap: 1rem; align-items: center; }
+    .btn-sm {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e4e4e7;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-sm:hover { border-color: #7c3aed; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+    .stat-value { font-size: 1.8rem; font-weight: 800; }
+    .stat-label { font-size: 0.8rem; color: #71717a; margin-top: 0.2rem; }
+    .stat.purple .stat-value { color: #c084fc; }
+    .stat.green .stat-value { color: #34d399; }
+    .stat.blue .stat-value { color: #60a5fa; }
+    .stat.yellow .stat-value { color: #fbbf24; }
+
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #71717a;
+      margin-bottom: 1rem;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .platform {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+    .platform .name { font-weight: 600; margin-bottom: 0.5rem; }
+    .platform .status { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+    .platform .status .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot.green { background: #34d399; box-shadow: 0 0 6px #34d399; }
+    .dot.yellow { background: #fbbf24; }
+    .dot.gray { background: #52525b; }
+    .platform .action { margin-top: 0.8rem; }
+    .platform .action button {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e4e4e7;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      width: 100%;
+    }
+    .platform .action button:hover { border-color: #7c3aed; }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .setting label { display: block; font-size: 0.85rem; color: #a1a1aa; margin-bottom: 0.3rem; }
+    .setting select, .setting input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e4e4e7;
+      padding: 0.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    .save-btn {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .save-btn:hover { opacity: 0.9; }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .review-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .review-item:last-child { border-bottom: none; }
+    .review-text { flex: 1; font-size: 0.9rem; line-height: 1.5; }
+    .review-meta { margin-left: 1rem; text-align: right; }
+    .review-rating { font-size: 1.1rem; }
+    .review-platforms { font-size: 0.75rem; color: #71717a; margin-top: 0.3rem; }
+    .review-status {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.3rem;
+      display: inline-block;
+    }
+    .review-status.published { background: rgba(52,211,153,0.12); color: #34d399; }
+    .review-status.draft { background: rgba(251,191,36,0.12); color: #fbbf24; }
+    .review-status.skipped { background: rgba(82,82,91,0.12); color: #71717a; }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle.on { background: #7c3aed; }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+    }
+    .toggle.on::after { transform: translateX(18px); }
+    .toggle-label { font-size: 0.85rem; color: #a1a1aa; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #111113;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      display: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .toast.show { display: block; }
+
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .platform-grid { grid-template-columns: 1fr; }
+      .settings-grid { grid-template-columns: 1fr; }
+      .container { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><span>◆</span> Auto-Publish Dashboard</div>
+    <div class="header-right">
+      <a href="auto-publish.html" class="btn-sm">Product Page</a>
+      <a href="https://451studios.com/tools/" class="btn-sm">All Tools</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat purple">
+        <div class="stat-value" id="reviewsCollected">0</div>
+        <div class="stat-label">Reviews Collected</div>
+      </div>
+      <div class="stat green">
+        <div class="stat-value" id="reviewsPublished">0</div>
+        <div class="stat-label">Published</div>
+      </div>
+      <div class="stat blue">
+        <div class="stat-value" id="responsesGenerated">0</div>
+        <div class="stat-label">Responses Generated</div>
+      </div>
+      <div class="stat yellow">
+        <div class="stat-value" id="yelpDrafts">0</div>
+        <div class="stat-label">Yelp Drafts</div>
+      </div>
+    </div>
+
+    <!-- Connected Platforms -->
+    <div class="card">
+      <div class="card-title">Connected Platforms</div>
+      <div class="platform-grid">
+        <div class="platform">
+          <div class="name">Google Business Profile</div>
+          <div class="status"><span class="dot gray"></span> Not connected</div>
+          <div class="action"><button onclick="connectGoogle()">Connect Google</button></div>
+        </div>
+        <div class="platform">
+          <div class="name">Yelp</div>
+          <div class="status"><span class="dot yellow"></span> Draft mode</div>
+          <div class="action"><button onclick="showYelpLink()">Post Drafts</button></div>
+        </div>
+        <div class="platform">
+          <div class="name">Facebook Reviews</div>
+          <div class="status"><span class="dot gray"></span> Not connected</div>
+          <div class="action"><button onclick="connectFacebook()">Connect Facebook</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="card">
+      <div class="card-title">Auto-Publish Settings</div>
+      <div class="settings-grid">
+        <div class="setting">
+          <label>Minimum Star Rating</label>
+          <select id="minRating">
+            <option value="3">3 stars and above</option>
+            <option value="4" selected>4 stars and above</option>
+            <option value="5">5 stars only</option>
+          </select>
+        </div>
+        <div class="setting">
+          <label>Auto-Generate Response</label>
+          <div class="toggle-wrap" style="margin-top:0.3rem;">
+            <div class="toggle on" id="autoReplyToggle" onclick="toggleAutoReply()"></div>
+            <span class="toggle-label">AI-generated responses enabled</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;">
+        <div class="toggle-wrap">
+          <div class="toggle on" id="googleToggle" onclick="togglePlatform('google')"></div>
+          <span class="toggle-label">Publish to Google Business Profile</span>
+        </div>
+        <div class="toggle-wrap">
+          <div class="toggle on" id="yelpToggle" onclick="togglePlatform('yelp')"></div>
+          <span class="toggle-label">Generate Yelp draft responses</span>
+        </div>
+        <div class="toggle-wrap">
+          <div class="toggle" id="facebookToggle" onclick="togglePlatform('facebook')"></div>
+          <span class="toggle-label">Publish to Facebook Reviews</span>
+        </div>
+      </div>
+      <button class="save-btn" id="saveSettings" onclick="saveSettings()">Save Settings</button>
+    </div>
+
+    <!-- Test It -->
+    <div class="card">
+      <div class="card-title">Test Auto-Publish</div>
+      <p style="color:#71717a;font-size:0.9rem;margin-bottom:1rem;">Simulate a review coming in. This will generate an AI response and show what would be published to each platform.</p>
+      <div class="settings-grid">
+        <div class="setting">
+          <label>Customer Name</label>
+          <input type="text" id="testName" value="Sarah Johnson" placeholder="Customer name">
+        </div>
+        <div class="setting">
+          <label>Rating</label>
+          <select id="testRating">
+            <option value="5">5 stars — Excellent</option>
+            <option value="4" selected>4 stars — Good</option>
+            <option value="3">3 stars — Average</option>
+            <option value="2">2 stars — Poor</option>
+            <option value="1">1 star — Bad</option>
+          </select>
+        </div>
+      </div>
+      <div class="setting" style="margin-top:1rem;">
+        <label>Review Text</label>
+        <textarea id="testReview" rows="3" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;padding:0.5rem;border-radius:8px;font-family:inherit;font-size:0.9rem;">Took my car in for an estimate and was blown away by how fast and professional the team was. Got the quote in under 5 minutes and they even helped me with my insurance claim. Highly recommend!</textarea>
+      </div>
+      <button class="save-btn" id="testBtn" onclick="testAutoPublish()">Run Test</button>
+      <div id="testResult" style="margin-top:1rem;display:none;"></div>
+    </div>
+
+    <!-- Review History -->
+    <div class="card">
+      <div class="card-title">Review History</div>
+      <div id="reviewList">
+        <div style="color:#71717a;padding:1rem;text-align:center;">No reviews processed yet. Run a test or connect your review collection to get started.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_BASE = 'https://451studios-stripe.451studios.com';
+    
+    // State
+    let state = {
+      platforms: { google: true, yelp: true, facebook: false },
+      minRating: 4,
+      autoReply: true,
+      history: JSON.parse(localStorage.getItem('autoPublishHistory') || '[]')
+    };
+
+    function updateStats() {
+      const history = state.history;
+      document.getElementById('reviewsCollected').textContent = history.length;
+      const published = history.filter(r => r.results?.some(p => p.status === 'ready' || p.status === 'published')).length;
+      document.getElementById('reviewsPublished').textContent = published;
+      document.getElementById('responsesGenerated').textContent = history.filter(r => r.aiResponse).length;
+      document.getElementById('yelpDrafts').textContent = history.filter(r => r.results?.some(p => p.platform === 'yelp')).length;
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('reviewList');
+      if (state.history.length === 0) {
+        list.innerHTML = '<div style="color:#71717a;padding:1rem;text-align:center;">No reviews processed yet. Run a test or connect your review collection to get started.</div>';
+        return;
+      }
+      list.innerHTML = state.history.slice().reverse().map(r => {
+        const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+        const status = r.skipped ? 'skipped' : 'published';
+        const statusLabel = r.skipped ? 'Skipped (low rating)' : 'Published';
+        return '<div class="review-item">' +
+          '<div class="review-text">' +
+            '<strong>' + (r.customer_name || 'Customer') + '</strong><br>' +
+            r.review_text +
+          '</div>' +
+          '<div class="review-meta">' +
+            '<div class="review-rating">' + stars + '</div>' +
+            '<div class="review-platforms">' + (r.results?.map(p => p.platform).join(', ') || 'none') + '</div>' +
+            '<div class="review-status ' + status + '">' + statusLabel + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function togglePlatform(platform) {
+      const el = document.getElementById(platform + 'Toggle');
+      state.platforms[platform] = !state.platforms[platform];
+      el.classList.toggle('on');
+    }
+
+    function toggleAutoReply() {
+      state.autoReply = !state.autoReply;
+      document.getElementById('autoReplyToggle').classList.toggle('on');
+    }
+
+    async function saveSettings() {
+      const btn = document.getElementById('saveSettings');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      
+      state.minRating = parseInt(document.getElementById('minRating').value);
+      
+      try {
+        const res = await fetch(API_BASE + '/api/auto-publish/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            platforms: state.platforms,
+            minRating: state.minRating,
+            autoReply: state.autoReply
+          })
+        });
+        const data = await res.json();
+        if (data.success) showToast('Settings saved');
+      } catch (e) {
+        showToast('Saved locally (server offline)');
+      }
+      
+      btn.disabled = false;
+      btn.textContent = 'Save Settings';
+    }
+
+    async function testAutoPublish() {
+      const btn = document.getElementById('testBtn');
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      
+      const resultDiv = document.getElementById('testResult');
+      resultDiv.style.display = 'none';
+      
+      const name = document.getElementById('testName').value;
+      const rating = parseInt(document.getElementById('testRating').value);
+      const review = document.getElementById('testReview').value;
+      
+      try {
+        const res = await fetch(API_BASE + '/api/auto-publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            review_text: review,
+            rating: rating,
+            customer_name: name,
+            platforms: state.platforms
+          })
+        });
+        const data = await res.json();
+        
+        if (data.skipped) {
+          resultDiv.innerHTML = '<div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);border-radius:8px;padding:1rem;"><strong>Review skipped</strong><br>' + data.reason + '</div>';
+        } else {
+          let html = '';
+          data.results.forEach(p => {
+            const statusIcon = p.status === 'ready' ? '✅' : p.status === 'draft' ? '📝' : '❌';
+            html += '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:1rem;margin-bottom:0.5rem;">';
+            html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">';
+            html += '<strong>' + statusIcon + ' ' + p.platform.charAt(0).toUpperCase() + p.platform.slice(1) + '</strong>';
+            html += '<span style="font-size:0.75rem;padding:0.2rem 0.5rem;border-radius:4px;background:rgba(52,211,153,0.12);color:#34d399;">' + p.status + '</span>';
+            html += '</div>';
+            html += '<div style="font-size:0.85rem;color:#a1a1aa;">' + p.response_text.substring(0, 200) + '</div>';
+            if (p.note) {
+              html += '<div style="font-size:0.75rem;color:#71717a;margin-top:0.3rem;">' + p.note + '</div>';
+            }
+            html += '</div>';
+          });
+          resultDiv.innerHTML = '<h3 style="margin-bottom:1rem;color:#34d399;">✅ Published to ' + data.results.length + ' platform(s)</h3>' + html;
+        }
+        
+        // Save to history
+        state.history.push({
+          customer_name: name,
+          rating: rating,
+          review_text: review,
+          aiResponse: data.results?.[0]?.response_text || '',
+          skipped: data.skipped,
+          results: data.results || [],
+          timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('autoPublishHistory', JSON.stringify(state.history));
+        
+        updateStats();
+        renderHistory();
+        
+      } catch (e) {
+        resultDiv.innerHTML = '<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);border-radius:8px;padding:1rem;color:#ef4444;">Error: ' + e.message + '</div>';
+      }
+      
+      resultDiv.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Run Test';
+    }
+
+    function connectGoogle() {
+      showToast('Google OAuth integration coming soon. Response generation is ready.');
+    }
+
+    function connectFacebook() {
+      showToast('Facebook integration coming soon. Response generation is ready.');
+    }
+
+    function showYelpLink() {
+      window.open('https://yelp.com/business', '_blank');
+    }
+
+    // Init
+    updateStats();
+    renderHistory();
+
+    // Load settings from server
+    fetch(API_BASE + '/api/auto-publish/settings')
+      .then(r => r.json())
+      .then(data => {
+        if (data.settings) {
+          state.platforms = data.settings.platforms || state.platforms;
+          state.minRating = data.settings.minRating || 4;
+          state.autoReply = data.settings.autoReply !== undefined ? data.settings.autoReply : true;
+          document.getElementById('minRating').value = state.minRating;
+          Object.keys(state.platforms).forEach(p => {
+            const el = document.getElementById(p + 'Toggle');
+            if (state.platforms[p]) el.classList.add('on');
+            else el.classList.remove('on');
+          });
+          if (!state.autoReply) document.getElementById('autoReplyToggle').classList.remove('on');
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

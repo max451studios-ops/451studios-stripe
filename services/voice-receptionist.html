@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Voice Receptionist — 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --surface-2: #161a22; --border: #1f2433; --accent: #4f8ef7; --green: #2ecc71; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55 }
+    .container { width: min(100% - 32px, 1100px); margin: 0 auto }
+    header { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: rgba(10,12,16,.8); border-bottom: 1px solid rgba(255,255,255,.06) }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 12px }
+    .brand { font-weight: 800; letter-spacing: .05em; text-decoration: none; color: var(--text) }
+    .brand span { color: var(--accent) }
+    a.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 600; transition: .18s; cursor: pointer; font-size: .94rem; text-decoration: none }
+    a.btn:hover { transform: translateY(-1px); border-color: var(--accent) }
+    a.btn.primary { background: linear-gradient(135deg, var(--accent), #6366f1); border: none; color: white; box-shadow: 0 10px 24px rgba(79,142,247,.22) }
+    a.btn.green { background: linear-gradient(135deg, #58d68d, #2ecc71); border: none; color: #0a0c10 }
+    .hero { padding: 64px 0 32px; max-width: 780px }
+    .hero h1 { font-size: clamp(2.2rem,4vw,3.4rem); line-height: 1.08; margin-bottom: 16px; letter-spacing: -.03em }
+    .hero p { color: var(--muted); font-size: 1.05rem; margin-bottom: 20px }
+    .hero .stats { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap }
+    .hero .stats .stat strong { color: var(--text); font-size: 1.1rem; display: block }
+    section { padding: 28px 0 }
+    h2 { font-size: 1.4rem; margin-bottom: 16px }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px }
+    .card .icon { font-size: 1.6rem; margin-bottom: 8px }
+    .card h3 { font-size: 1rem; margin-bottom: 6px }
+    .card p { color: var(--muted); font-size: .88rem; line-height: 1.45 }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+    .pricing-card { text-align: center; padding: 28px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px }
+    .pricing-card.featured { border-color: var(--accent); background: linear-gradient(135deg, rgba(79,142,247,.1), rgba(99,102,241,.06)) }
+    .pricing-card .price { font-size: 2.2rem; font-weight: 800; margin: 8px 0 }
+    .pricing-card .price span { font-size: .9rem; color: var(--muted); font-weight: 400 }
+    .pricing-card .margin { display: inline-block; padding: 2px 8px; border-radius: 999px; background: rgba(46,204,113,.12); color: var(--green); font-size: .78rem; font-weight: 600; margin-bottom: 8px }
+    .pricing-card ul { list-style: none; padding: 0; margin: 16px 0; text-align: left }
+    .pricing-card li { padding: 5px 0; color: var(--muted); font-size: .85rem }
+    .pricing-card li::before { content: "✓ "; color: var(--green) }
+    .process { display: grid; gap: 10px; max-width: 700px }
+    .step { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; padding: 14px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06) }
+    .step-num { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), #6366f1); font-weight: 700; font-size: .9rem }
+    .cta-block { margin: 28px 0 48px; padding: 28px; border-radius: 20px; background: linear-gradient(135deg, rgba(79,142,247,.14), rgba(99,102,241,.1)); border: 1px solid rgba(79,142,247,.16); display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap }
+    footer { padding: 28px 0 48px; color: var(--muted); text-align: center; font-size: .88rem }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 20px; background: var(--surface); border-radius: 16px; border: 1px solid var(--border) }
+    .comparison .vs { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; text-align: center; padding: 8px }
+    .comparison h3 { margin-bottom: 8px }
+    .comparison ul { list-style: none }
+    .comparison li { padding: 4px 0; font-size: .88rem; color: var(--muted) }
+    .comparison .bad { text-decoration: line-through; color: #e74c3c }
+    @media (max-width: 860px) { .grid-3, .pricing-grid { grid-template-columns: 1fr } .comparison { grid-template-columns: 1fr } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="/">451 <span>Studios</span></a>
+      <a class="btn primary" href="#pricing">Get Started</a>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h1>Never miss another call again.</h1>
+      <p>AI receptionist for auto shops and local service businesses. Answers 24/7, books appointments, takes messages. Set up in under an hour, costs less than a cup of coffee per day.</p>
+      <div class="stats">
+        <div class="stat"><strong>24/7</strong> answering</div>
+        <div class="stat"><strong>60s</strong> setup per client</div>
+        <div class="stat"><strong>$149</strong>/mo starting</div>
+        <div class="stat"><strong>3.2M</strong> missed calls/day in US auto shops</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Receptionist vs AI</h2>
+      <div class="comparison">
+        <div>
+          <h3>❌ Human Receptionist</h3>
+          <ul>
+            <li class="bad">$30K-40K/year salary</li>
+            <li class="bad">9-5 only (misses evening/weekend calls)</li>
+            <li class="bad">Sick days, vacations, turnover</li>
+            <li class="bad">Limited to one phone line</li>
+            <li class="bad">No call analytics</li>
+          </ul>
+        </div>
+        <div>
+          <h3>✅ AI Receptionist</h3>
+          <ul>
+            <li>$1,788-3,588/year (save $28K+)</li>
+            <li>24/7/365 — never misses a call</li>
+            <li>Zero turnover, zero training</li>
+            <li>Multiple lines, voicemail, SMS, email</li>
+            <li>Full call logs and transcripts</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>What it does</h2>
+      <div class="grid-3">
+        <div class="card"><div class="icon">📞</div><h3>Answers Every Call</h3><p>Natural AI voice conversation. Asks callers what they need, books appointments, provides pricing, or takes messages.</p></div>
+        <div class="card"><div class="icon">📅</div><h3>Books Appointments</h3><p>Integrated calendar scheduling. Customers book directly through conversation — no app, no form, no friction.</p></div>
+        <div class="card"><div class="icon">💬</div><h3>SMS &amp; Voicemail</h3><p>Sends SMS summaries of calls. Voicemail transcripts emailed instantly. Never wonder what a caller wanted.</p></div>
+        <div class="card"><div class="icon">🤖</div><h3>Custom AI Training</h3><p>We train the AI on your services, pricing, hours, and FAQs. It sounds like your shop, not a robot.</p></div>
+        <div class="card"><div class="icon">📊</div><h3>Call Analytics</h3><p>See call volume, missed calls, response times, and booking rates. Know exactly how many leads you're capturing.</p></div>
+        <div class="card"><div class="icon">🔗</div><h3>Zapier Integration</h3><p>Connects to your CRM, email, calendar, and SMS. Automate follow-ups and lead capture end-to-end.</p></div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2 style="text-align:center">Reseller pricing</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:20px">We set up, configure, and manage everything. You just refer clients.</p>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Basic</h3>
+          <div class="margin">You keep $50/mo</div>
+          <div class="price">$149<span>/mo</span></div>
+          <ul>
+            <li>AI phone answering</li>
+            <li>Custom greeting &amp; hours</li>
+            <li>Voicemail + transcripts</li>
+            <li>SMS summaries</li>
+            <li>Basic setup included</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Refer a Client</a>
+        </div>
+        <div class="pricing-card featured">
+          <h3>Managed</h3>
+          <div class="margin">You keep $100/mo</div>
+          <div class="price">$199<span>/mo</span></div>
+          <ul>
+            <li>Everything in Basic</li>
+            <li>Calendar booking integration</li>
+            <li>AI training on your services</li>
+            <li>Call analytics dashboard</li>
+            <li>Ongoing management &amp; updates</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Refer a Client</a>
+        </div>
+        <div class="pricing-card">
+          <h3>Premium</h3>
+          <div class="margin">You keep $200/mo</div>
+          <div class="price">$299<span>/mo</span></div>
+          <ul>
+            <li>Everything in Managed</li>
+            <li>Review request SMS automation</li>
+            <li>Multi-location support</li>
+            <li>Zapier integration setup</li>
+            <li>Dedicated support line</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Refer a Client</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <div class="process">
+        <div class="step"><div class="step-num">1</div><div><strong>We sign up</strong><br><span style="color:var(--muted);font-size:.88rem">You give us the client's business name, phone number, and services. We create their AI receptionist account.</span></div></div>
+        <div class="step"><div class="step-num">2</div><div><strong>We train it</strong><br><span style="color:var(--muted);font-size:.88rem">We configure the AI with business hours, service menus, pricing ranges, and common FAQs. Test call within 30 minutes.</span></div></div>
+        <div class="step"><div class="step-num">3</div><div><strong>Go live</strong><br><span style="color:var(--muted);font-size:.88rem">Port or forward the client's existing number. AI starts answering calls immediately. Client gets a test call to hear it in action.</span></div></div>
+        <div class="step"><div class="step-num">4</div><div><strong>We bill</strong><br><span style="color:var(--muted);font-size:.88rem">Client pays us via Stripe. We pay the wholesale fee. You never see the backend — just profit.</span></div></div>
+      </div>
+    </section>
+
+    <div class="cta-block">
+      <div><strong style="font-size:1.1rem">Ready to never miss a call?</strong><br><span style="color:var(--muted)">First client setup takes 1 hour. We handle everything.</span></div>
+      <a class="btn green" href="#">Get Started →</a>
+    </div>
+  </main>
+  <footer><div class="container">451 Studios — AI Voice Receptionist for Auto Shops</div></footer>
+</body>
+</html>

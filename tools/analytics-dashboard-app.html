@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics Dashboard — 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --surface-2: #161a22; --border: #1f2433; --accent: #4f8ef7; --green: #2ecc71; --yellow: #f39c12; --red: #e74c3c; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5 }
+    .app { padding: 24px 32px; max-width: 1200px; margin: 0 auto }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px }
+    .header-row h1 { font-size: 1.3rem; font-weight: 700 }
+    .header-row p { color: var(--muted); font-size: .85rem }
+    button, .btn { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 600; font-size: .86rem; cursor: pointer; transition: .15s; font-family: inherit }
+    button:hover { border-color: var(--accent); transform: translateY(-1px) }
+    button.primary { background: var(--accent); border: none; color: white }
+    button.small { padding: 4px 10px; font-size: .78rem }
+
+    .section-head { font-size: .82rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border) }
+
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: center }
+    .card .icon { font-size: 1.5rem; margin-bottom: 6px }
+    .card .num { font-size: 1.6rem; font-weight: 700 }
+    .card .label { font-size: .75rem; color: var(--muted); margin-top: 2px }
+    .card .sub { font-size: .72rem; color: var(--muted); margin-top: 2px }
+
+    .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px }
+    .module-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px; text-decoration: none; color: var(--text); transition: .15s; display: block;
+    }
+    .module-card:hover { border-color: var(--accent); transform: translateY(-2px) }
+    .module-card .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px }
+    .module-card .top .icon { font-size: 1.5rem }
+    .module-card .name { font-weight: 600; font-size: .92rem }
+    .module-card .stat-row { display: flex; gap: 12px; color: var(--muted); font-size: .78rem }
+
+    .refresh-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; font-size: .82rem; color: var(--muted) }
+    @media (max-width: 980px) { .grid-5 { grid-template-columns: repeat(3,1fr) } .module-grid { grid-template-columns: 1fr } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header-row">
+      <div>
+        <h1>📊 Analytics Dashboard</h1>
+        <p>Your entire Marketing OS at a glance</p>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="refreshData()">🔄 Refresh</button>
+        <button class="primary" onclick="exportJSON()">📤 Export</button>
+      </div>
+    </div>
+
+    <div class="refresh-bar">
+      <span id="last-refresh">Last refreshed: just now</span>
+    </div>
+
+    <div class="grid-5">
+      <div class="card"><div class="icon">💬</div><div class="num" id="sms-sent">0</div><div class="label">SMS Sent</div><div class="sub" id="sms-rate">—% response rate</div></div>
+      <div class="card"><div class="icon">⭐</div><div class="num" id="reviews-total">0</div><div class="label">Reviews</div><div class="sub" id="reviews-avg">— avg rating</div></div>
+      <div class="card"><div class="icon">🎨</div><div class="num" id="ads-total">0</div><div class="label">Ads Created</div><div class="sub" id="ads-variants">— variants</div></div>
+      <div class="card"><div class="icon">📱</div><div class="num" id="social-scheduled">0</div><div class="label">Scheduled Posts</div><div class="sub" id="social-published">— published</div></div>
+      <div class="card"><div class="icon">🚩</div><div class="num" id="reputation-flagged">0</div><div class="label">Flagged Reviews</div><div class="sub" id="reputation-rate">—% responded</div></div>
+    </div>
+
+    <div class="section-head">Module Deep Dive</div>
+    <div class="module-grid">
+      <a class="module-card" href="review-request-app.html">
+        <div class="top"><span class="icon">💬</span><span class="name">Review Request SMS</span></div>
+        <div class="stat-row"><span id="sms-sent-module">0 sent</span><span id="sms-rate-module">—% response</span></div>
+      </a>
+      <a class="module-card" href="auto-publish-app.html">
+        <div class="top"><span class="icon">📤</span><span class="name">Auto-Publish Reviews</span></div>
+        <div class="stat-row"><span id="ap-queued">0 queued</span><span id="ap-published">0 published</span></div>
+      </a>
+      <a class="module-card" href="ad-creator-app.html">
+        <div class="top"><span class="icon">🎨</span><span class="name">Ad Creative Generator</span></div>
+        <div class="stat-row"><span id="ads-total-module">0 ads</span><span id="ads-last">Last: —</span></div>
+      </a>
+      <a class="module-card" href="social-scheduler-app.html">
+        <div class="top"><span class="icon">📱</span><span class="name">Social Scheduler</span></div>
+        <div class="stat-row"><span id="social-drafted">0 drafted</span><span id="social-scheduled-module">0 scheduled</span></div>
+      </a>
+      <a class="module-card" href="reputation-monitor-app.html">
+        <div class="top"><span class="icon">⭐</span><span class="name">Reputation Monitor</span></div>
+        <div class="stat-row"><span id="rep-flagged-module">0 flagged</span><span id="rep-responded-module">0 responded</span></div>
+      </a>
+      <a class="module-card" href="ad-creator-app.html">
+        <div class="top"><span class="icon">📊</span><span class="name">Analytics Dashboard</span></div>
+        <div class="stat-row"><span>You are here</span></div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function loadStats() {
+      // Load from localStorage across all Marketing OS modules
+      const smsData = JSON.parse(localStorage.getItem('rr_history') || '[]');
+      const reviewsData = JSON.parse(localStorage.getItem('ap_queue') || '[]');
+      const adData = JSON.parse(localStorage.getItem('ac_history') || '[]');
+      const socialData = JSON.parse(localStorage.getItem('ss_posts') || '[]');
+      const repData = JSON.parse(localStorage.getItem('rm_reviews') || '[]');
+
+      // SMS
+      const smsSent = smsData.length;
+      const smsResponded = smsData.filter(d => d.clicked).length;
+      const smsRate = smsSent > 0 ? Math.round(smsResponded / smsSent * 100) : 0;
+      document.getElementById('sms-sent').textContent = smsSent;
+      document.getElementById('sms-rate').textContent = smsRate + '% response rate';
+      document.getElementById('sms-sent-module').textContent = smsSent + ' sent';
+      document.getElementById('sms-rate-module').textContent = smsRate + '% response';
+
+      // Reviews (Auto-Publish)
+      const apQueued = reviewsData.filter(r => r.status === 'queued' || r.status === 'pending').length;
+      const apPublished = reviewsData.filter(r => r.status === 'published').length;
+      document.getElementById('ap-queued').textContent = apQueued + ' queued';
+      document.getElementById('ap-published').textContent = apPublished + ' published';
+
+      // Ads
+      const adsTotal = adData.length;
+      const adVariants = adData.reduce((s, a) => s + (a.variants ? a.variants.length : 1), 0);
+      const lastAd = adData.length > 0 ? adData[adData.length - 1] : null;
+      const lastAdStr = lastAd ? (lastAd.service || lastAd.tone || 'recent') : '—';
+      document.getElementById('ads-total').textContent = adsTotal;
+      document.getElementById('ads-variants').textContent = adVariants + ' variants';
+      document.getElementById('ads-total-module').textContent = adsTotal + ' ads';
+      document.getElementById('ads-last').textContent = 'Last: ' + lastAdStr;
+
+      // Social
+      const socialDrafted = socialData.filter(p => p.status === 'draft').length;
+      const socialScheduled = socialData.filter(p => p.status === 'scheduled').length;
+      const socialPublished = socialData.filter(p => p.status === 'published').length;
+      document.getElementById('social-scheduled').textContent = socialScheduled;
+      document.getElementById('social-published').textContent = socialPublished + ' published';
+      document.getElementById('social-drafted').textContent = socialDrafted + ' drafted';
+      document.getElementById('social-scheduled-module').textContent = socialScheduled + ' scheduled';
+
+      // Reviews (Reputation)
+      const repFlagged = repData.filter(r => parseInt(r.rating) <= 3).length;
+      const repResponded = repData.filter(r => r.responded).length;
+      const repRate = repData.length > 0 ? Math.round(repResponded / repData.length * 100) : 0;
+      const repAvg = repData.length > 0 ? (repData.reduce((s, r) => s + parseInt(r.rating), 0) / repData.length).toFixed(1) : '—';
+      document.getElementById('reviews-total').textContent = repData.length;
+      document.getElementById('reviews-avg').textContent = repAvg + ' avg rating';
+      document.getElementById('reputation-flagged').textContent = repFlagged;
+      document.getElementById('reputation-rate').textContent = repRate + '% responded';
+      document.getElementById('rep-flagged-module').textContent = repFlagged + ' flagged';
+      document.getElementById('rep-responded-module').textContent = repResponded + ' responded';
+
+      document.getElementById('last-refresh').textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
+    }
+
+    function refreshData() {
+      loadStats();
+    }
+
+    function exportJSON() {
+      const data = {
+        sms: JSON.parse(localStorage.getItem('rr_history') || '[]'),
+        reviews: JSON.parse(localStorage.getItem('ap_queue') || '[]'),
+        ads: JSON.parse(localStorage.getItem('ac_history') || '[]'),
+        social: JSON.parse(localStorage.getItem('ss_posts') || '[]'),
+        reputation: JSON.parse(localStorage.getItem('rm_reviews') || '[]'),
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'marketing-os-export.json'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    loadStats();
+  </script>
+</body>
+</html>

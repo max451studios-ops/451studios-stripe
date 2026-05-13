@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Intake — SEO Content Retainer</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --border: #1f2433; --accent: #4f8ef7; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 32px }
+    .container { max-width: 700px; margin: 0 auto }
+    h1 { font-size: 1.5rem; margin-bottom: 8px }
+    p { color: var(--muted); margin-bottom: 24px; font-size: .92rem }
+    label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 4px; margin-top: 16px }
+    input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .9rem; font-family: inherit }
+    textarea { resize: vertical; min-height: 80px }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+    button { padding: 12px 24px; border-radius: 10px; border: none; background: linear-gradient(135deg, var(--accent), #6366f1); color: white; font-weight: 600; font-size: .95rem; cursor: pointer; margin-top: 20px }
+    button:hover { filter: brightness(1.1) }
+    .success { display: none; text-align: center; padding: 40px }
+    .success .icon { font-size: 3rem; margin-bottom: 12px }
+    @media (max-width: 600px) { .row { grid-template-columns: 1fr } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="form-view">
+      <h1>📝 SEO Content Client Intake</h1>
+      <p>Tell us about your business and content goals. We'll build a content plan within 48 hours.</p>
+
+      <label>Company Name</label>
+      <input type="text" id="company" placeholder="Acme SaaS Inc.">
+
+      <label>Website URL</label>
+      <input type="url" id="website" placeholder="https://acmesaas.com">
+
+      <label>Industry / Niche</label>
+      <input type="text" id="niche" placeholder="e.g. martech, productivity, fintech">
+
+      <div class="row">
+        <div>
+          <label>Target Audience</label>
+          <input type="text" id="audience" placeholder="e.g. CTOs, marketing directors">
+        </div>
+        <div>
+          <label>Current Blog?</label>
+          <select id="has-blog">
+            <option value="yes">Yes, actively blogging</option>
+            <option value="sporadic">Yes, but inconsistent</option>
+            <option value="no">No blog yet</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Desired Articles/Week</label>
+          <select id="frequency">
+            <option value="2">2 articles/week ($800/mo)</option>
+            <option value="4">4 articles/week ($1,200/mo)</option>
+            <option value="8">8 articles/week ($2,000/mo)</option>
+            <option value="unsure">Not sure yet</option>
+          </select>
+        </div>
+        <div>
+          <label>WordPress Site?</label>
+          <select id="has-wp">
+            <option value="yes">Yes, WordPress</option>
+            <option value="other">Other CMS</option>
+            <option value="no">Not yet</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Target Topics / Keywords</label>
+      <textarea id="topics" placeholder="List topics or keywords you want to rank for..." rows="3"></textarea>
+
+      <label>Competitors (URLs)</label>
+      <textarea id="competitors" placeholder="List competitor sites you admire..." rows="2"></textarea>
+
+      <label>Additional Notes</label>
+      <textarea id="notes" rows="2"></textarea>
+
+      <button onclick="submitIntake()">Submit → We'll Build Your Plan</button>
+    </div>
+
+    <div class="success" id="success-view">
+      <div class="icon">🎉</div>
+      <h1>Got it!</h1>
+      <p style="margin-top:8px">We'll review your intake and send a custom content plan within 48 hours.</p>
+    </div>
+  </div>
+
+  <script>
+    function submitIntake() {
+      const data = {
+        company: document.getElementById('company').value,
+        website: document.getElementById('website').value,
+        niche: document.getElementById('niche').value,
+        audience: document.getElementById('audience').value,
+        hasBlog: document.getElementById('has-blog').value,
+        frequency: document.getElementById('frequency').value,
+        hasWP: document.getElementById('has-wp').value,
+        topics: document.getElementById('topics').value,
+        competitors: document.getElementById('competitors').value,
+        notes: document.getElementById('notes').value,
+        submittedAt: new Date().toISOString()
+      };
+
+      // Save to localStorage for now (backend endpoint later)
+      const intakes = JSON.parse(localStorage.getItem('seo_intakes') || '[]');
+      intakes.push(data);
+      localStorage.setItem('seo_intakes', JSON.stringify(intakes));
+
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('success-view').style.display = '';
+    }
+  </script>
+</body>
+</html>

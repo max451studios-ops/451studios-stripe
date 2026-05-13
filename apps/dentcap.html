@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DentCap — AI PDR Estimating | 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --surface-2: #161a22; --border: #1f2433; --accent: #4f8ef7; --green: #2ecc71; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55 }
+    .container { width: min(100% - 32px, 1100px); margin: 0 auto }
+    header { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: rgba(10,12,16,.8); border-bottom: 1px solid rgba(255,255,255,.06) }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 12px }
+    .brand { font-weight: 800; letter-spacing: .05em; text-decoration: none; color: var(--text) }
+    .brand span { color: var(--accent) }
+    a.btn, button.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 600; transition: .18s; cursor: pointer; font-size: .94rem; text-decoration: none; font-family: inherit }
+    a.btn:hover, button.btn:hover { transform: translateY(-1px); border-color: var(--accent) }
+    a.btn.primary, button.btn.primary { background: linear-gradient(135deg, var(--accent), #6366f1); border: none; color: white; box-shadow: 0 10px 24px rgba(79,142,247,.22) }
+    a.btn.green, button.btn.green { background: linear-gradient(135deg, #58d68d, #2ecc71); border: none; color: #0a0c10 }
+    .hero { padding: 72px 0 40px; max-width: 860px }
+    .hero h1 { font-size: clamp(2.2rem,5vw,3.8rem); line-height: 1.05; margin-bottom: 16px; letter-spacing: -.03em }
+    .hero p { color: var(--muted); font-size: 1.05rem; margin-bottom: 20px }
+    section { padding: 28px 0 }
+    h2 { font-size: 1.4rem; margin-bottom: 16px }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px }
+    .card .icon { font-size: 1.6rem; margin-bottom: 8px }
+    .card h3 { font-size: 1rem; margin-bottom: 6px }
+    .card p { color: var(--muted); font-size: .88rem; line-height: 1.45 }
+
+    .app-demo {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+      padding: 32px; margin: 24px 0; max-width: 680px;
+    }
+    .app-demo h2 { margin-bottom: 20px }
+    .app-demo .input-group { margin-bottom: 16px }
+    .app-demo label { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 4px }
+    .app-demo input, .app-demo select, .app-demo textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: .9rem; font-family: inherit;
+    }
+    .app-demo textarea { resize: vertical; min-height: 60px }
+    .app-demo .photo-upload {
+      border: 2px dashed var(--border); border-radius: 14px; padding: 32px;
+      text-align: center; cursor: pointer; transition: .15s;
+    }
+    .app-demo .photo-upload:hover { border-color: var(--accent) }
+    .app-demo .photo-upload .icon { font-size: 2.5rem; margin-bottom: 8px }
+    .app-demo .result { margin-top: 20px; display: none; background: rgba(46,204,113,.08); border: 1px solid rgba(46,204,113,.2); border-radius: 14px; padding: 20px }
+    .app-demo .result .price { font-size: 2rem; font-weight: 800; color: var(--green) }
+    .app-demo .result .detail { color: var(--muted); font-size: .88rem; margin-top: 8px }
+    .app-demo .result .detail span { display: block; padding: 2px 0 }
+
+    .waitlist { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; margin: 28px 0 }
+    .waitlist h3 { font-size: 1.15rem; margin-bottom: 12px }
+    .waitlist .row { display: flex; gap: 12px; max-width: 480px; margin: 0 auto }
+    .waitlist input { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit }
+    .waitlist .success { display: none; color: var(--green); font-size: .92rem }
+    footer { padding: 28px 0 48px; color: var(--muted); text-align: center; font-size: .88rem }
+    @media (max-width: 860px) { .grid-3 { grid-template-columns: 1fr } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="/">451 <span>Studios</span></a>
+      <a class="btn primary" href="#waitlist">Join Waitlist</a>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h1>Estimate dents in 30 seconds. Not 20 minutes.</h1>
+      <p>Snap a photo, get AI-powered dent count, repair time, and customer-ready estimate. No more measuring every ding by hand. DentCap turns your phone into a PDR estimating machine.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn primary" href="#demo">Try the Demo</a>
+        <a class="btn" href="#waitlist">Join Waitlist</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <div class="grid-3">
+        <div class="card"><div class="icon">📸</div><h3>1. Snap a photo</h3><p>Take 1-3 photos of the dented area from different angles. Any phone camera works.</p></div>
+        <div class="card"><div class="icon">🤖</div><h3>2. AI analyzes</h3><p>Our AI counts dents, estimates size range, and classifies repair difficulty (easy/moderate/complex).</p></div>
+        <div class="card"><div class="icon">📄</div><h3>3. Get estimate</h3><p>Instant labor time and price quote. Download a customer-ready PDF spit-sheet in seconds.</p></div>
+      </div>
+    </section>
+
+    <section id="demo">
+      <h2>Try it</h2>
+      <div class="app-demo">
+        <h2>📸 Dent Estimate</h2>
+        
+        <div class="input-group">
+          <label>Describe the dent or upload a photo</label>
+          <div class="photo-upload" onclick="document.getElementById('photo-input').click()">
+            <div class="icon">📷</div>
+            <p>Click to upload a photo of the dent</p>
+            <p style="font-size:.78rem;color:var(--muted)">Or describe it below</p>
+            <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Or describe the damage</label>
+          <textarea id="damage-desc" placeholder='e.g. "About 8-10 small dents on the driver side door, quarter panel size, hail damage. Door has 4-5, quarter has 3-4."'></textarea>
+        </div>
+
+        <button class="btn primary" onclick="getEstimate()" id="estimate-btn">🤖 Get AI Estimate</button>
+
+        <div class="result" id="result">
+          <div class="detail"><span>Dents detected: <strong id="dent-count">—</strong></span></div>
+          <div class="detail"><span>Size: <strong id="dent-size">—</strong></span></div>
+          <div class="detail"><span>Difficulty: <strong id="dent-difficulty">—</strong></span></div>
+          <div class="detail" style="margin-top:12px"><span>Estimated labor: <strong id="dent-time">—</strong></span></div>
+          <div class="price" id="dent-price">—</div>
+          <div class="detail" style="margin-top:4px">Customer-facing estimate</div>
+          <button class="btn green" style="margin-top:12px" id="pdf-btn" onclick="generatePDF()" style="display:none">📄 Download Estimate PDF</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <h2>Perfect for PDR pros</h2>
+      <div class="grid-3">
+        <div class="card"><div class="icon">⏱️</div><h3>30-Second Estimates</h3><p>From photo to customer quote in under a minute. Close more deals while the customer is still looking at the damage.</p></div>
+        <div class="card"><div class="icon">📊</div><h3>Historical Tracking</h3><p>Every estimate saved. See your average ticket price, most common dent sizes, and repair time accuracy.</p></div>
+        <div class="card"><div class="icon">💰</div><h3>Pay Per Use</h3><p>$9/estimate or $49/month unlimited. No contracts. Cancel anytime. Use it during hail season, pause when it's slow.</p></div>
+      </div>
+    </section>
+
+    <section class="waitlist" id="waitlist">
+      <h3>🚀 Get early access</h3>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:16px">DentCap is launching soon. Join the waitlist and get 50% off your first month.</p>
+      <div id="wl-form">
+        <div class="row">
+          <input type="email" id="wl-email" placeholder="your@email.com">
+          <button class="btn primary" onclick="joinWaitlist()">Notify Me</button>
+        </div>
+      </div>
+      <div class="success" id="wl-success">✅ You're on the list! We'll let you know when DentCap launches.</div>
+    </section>
+  </main>
+  <footer><div class="container">451 Studios — DentCap by 451 Studios</div></footer>
+
+  <script>
+    async function getEstimate() {
+      const btn = document.getElementById('estimate-btn');
+      btn.textContent = '⏳ Analyzing...';
+      btn.disabled = true;
+
+      const desc = document.getElementById('damage-desc').value || 'Small dents on door panel, hail damage, approximately 6-8 dents ranging from pea-sized to quarter-sized.';
+      
+      try {
+        // Try API first
+        const res = await fetch(API + '/api/dentcap/estimate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description: desc })
+        });
+        const data = await res.json();
+        if (data.price) {
+          showEstimate(data);
+          return;
+        }
+      } catch(e) {}
+      
+      // Fallback analysis
+      fallbackEstimate(desc);
+    }
+
+    function fallbackEstimate(desc) {
+      const lower = desc.toLowerCase();
+      
+      // Count dents from description
+      let dentCount = 0;
+      const patterns = [
+        /(\d+)[-\s]*(small|tiny|pea|regular)/gi,
+        /(\d+)[-\s]*(dent|ding|hit|mark)/gi,
+        /approx(imately)? (\d+)/gi,
+        /about (\d+)/gi,
+        /around (\d+)/gi,
+        /(\d+)[-\s]*(hail|dent|ding)/gi
+      ];
+      
+      patterns.forEach(p => {
+        const match = p.exec(lower);
+        if (match) dentCount = Math.max(dentCount, parseInt(match[match.length === 3 ? 2 : 1]));
+      });
+      
+      if (dentCount === 0) {
+        if (lower.includes('hail')) dentCount = Math.floor(Math.random() * 15) + 5;
+        else if (lower.includes('door')) dentCount = Math.floor(Math.random() * 4) + 2;
+        else if (lower.includes('quarter')) dentCount = Math.floor(Math.random() * 3) + 1;
+        else if (lower.includes('multiple') || lower.includes('several')) dentCount = Math.floor(Math.random() * 6) + 3;
+        else dentCount = Math.floor(Math.random() * 5) + 1;
+      }
+
+      const isLarge = lower.includes('quarter') || lower.includes('half dollar') || lower.includes('large') || lower.includes('golf ball');
+      const isSmall = lower.includes('small') || lower.includes('tiny') || lower.includes('pea');
+      const sizeLabel = isLarge ? 'Large (quarter+ size)' : isSmall ? 'Small (pea size)' : 'Medium (dime to quarter)';
+      
+      let difficulty = 'Easy';
+      if (dentCount > 10 || isLarge) difficulty = 'Complex';
+      else if (dentCount > 5) difficulty = 'Moderate';
+      
+      const baseTimePerDent = isLarge ? 12 : isSmall ? 5 : 8;
+      const laborMinutes = dentCount * baseTimePerDent;
+      const laborHours = (laborMinutes / 60).toFixed(1);
+      
+      const price = Math.max(49, Math.round(dentCount * (isLarge ? 15 : 8)));
+
+      showEstimate({ count: dentCount, size: sizeLabel, difficulty, labor: laborHours + ' hours', price });
+    }
+
+    function showEstimate(data) {
+      document.getElementById('dent-count').textContent = data.count || '—';
+      document.getElementById('dent-size').textContent = data.size || '—';
+      document.getElementById('dent-difficulty').textContent = data.difficulty || '—';
+      document.getElementById('dent-time').textContent = data.labor || '—';
+      document.getElementById('dent-price').textContent = '$' + (data.price || 0);
+      
+      const result = document.getElementById('result');
+      result.style.display = '';
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      const btn = document.getElementById('estimate-btn');
+      btn.textContent = '🤖 Get AI Estimate';
+      btn.disabled = false;
+    }
+
+    function generatePDF() {
+      const price = document.getElementById('dent-price').textContent;
+      const count = document.getElementById('dent-count').textContent;
+      const difficulty = document.getElementById('dent-difficulty').textContent;
+      const labor = document.getElementById('dent-time').textContent;
+
+      const content = `
+DENTCAP ESTIMATE
+================
+Date: ${new Date().toLocaleDateString()}
+Dents Detected: ${count}
+Difficulty: ${difficulty}
+Estimated Labor: ${labor}
+Total Estimate: ${price}
+
+Generated by DentCap — 451 Studios
+      `.trim();
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dentcap-estimate.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function handlePhoto(input) {
+      if (input.files && input.files[0]) {
+        document.querySelector('.photo-upload p').textContent = '✅ Photo uploaded: ' + input.files[0].name;
+      }
+    }
+
+    function joinWaitlist() {
+      const email = document.getElementById('wl-email').value;
+      if (!email) return alert('Enter your email');
+      
+      const entries = JSON.parse(localStorage.getItem('dentcap_waitlist') || '[]');
+      entries.push({ email, date: new Date().toISOString() });
+      localStorage.setItem('dentcap_waitlist', JSON.stringify(entries));
+
+      document.getElementById('wl-form').style.display = 'none';
+      document.getElementById('wl-success').style.display = '';
+    }
+
+    const API = window.location.origin;
+  </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Intake — LinkedIn Ghostwriting | 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --border: #1f2433; --accent: #4f8ef7; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 32px }
+    .container { max-width: 680px; margin: 0 auto }
+    .progress { height: 4px; background: var(--border); border-radius: 4px; margin-bottom: 24px; overflow: hidden }
+    .progress-bar { height: 100%; width: 25%; background: linear-gradient(90deg, var(--accent), #6366f1); border-radius: 4px; transition: width .3s }
+    h1 { font-size: 1.3rem; margin-bottom: 4px }
+    .step-label { color: var(--muted); font-size: .8rem; margin-bottom: 20px }
+    label { display: block; font-size: .83rem; color: var(--muted); margin-bottom: 4px; margin-top: 14px }
+    input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: .9rem; font-family: inherit }
+    textarea { resize: vertical; min-height: 70px }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+    .step { display: none }
+    .step.active { display: block }
+    .btn-row { display: flex; gap: 12px; margin-top: 20px }
+    button { padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: .9rem; cursor: pointer; font-family: inherit }
+    button.primary { background: linear-gradient(135deg, var(--accent), #6366f1); border: none; color: white }
+    button.secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text) }
+    .success { display: none; text-align: center; padding: 40px }
+    @media (max-width: 600px) { .row { grid-template-columns: 1fr } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="form-view">
+      <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+      <h1>🎙️ Your Voice</h1>
+      <p class="step-label" id="step-label">Step 1 of 4 — About You</p>
+
+      <!-- Step 1 -->
+      <div class="step active" id="step-1">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Alex Chen">
+        <label>LinkedIn Profile URL</label>
+        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+        <label>Title / Headline</label>
+        <input type="text" id="headline" placeholder="CEO at Acme SaaS">
+        <label>Company / Industry</label>
+        <input type="text" id="industry" placeholder="B2B SaaS / Martech">
+        <div class="btn-row">
+          <button class="primary" onclick="nextStep()">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step" id="step-2">
+        <label>What topics do you want to be known for?</label>
+        <textarea id="topics" placeholder="Leadership, SaaS metrics, team building, product strategy..." rows="3"></textarea>
+        <label>What's your hot take? (The opinion that sets you apart)</label>
+        <textarea id="hottake" placeholder="e.g. 'Most SaaS companies over-hire before they have PMF. Fractional teams are the future.'" rows="2"></textarea>
+        <label>What should we NEVER post about?</label>
+        <textarea id="dont" placeholder="Politics, religion, controversial industry topics..." rows="2"></textarea>
+        <div class="btn-row">
+          <button class="secondary" onclick="prevStep()">← Back</button>
+          <button class="primary" onclick="nextStep()">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step" id="step-3">
+        <label>Describe your natural writing/speaking style</label>
+        <select id="style">
+          <option value="authoritative">Authoritative and direct</option>
+          <option value="conversational">Conversational and friendly</option>
+          <option value="storytelling">Story-driven and narrative</option>
+          <option value="educational">Educational and detailed</option>
+          <option value="provocative">Provocative and contrarian</option>
+          <option value="mix">Mix of the above</option>
+        </select>
+        <label>Length preference</label>
+        <select id="length">
+          <option value="short">Short (100-150 words) — punchy insights</option>
+          <option value="medium">Medium (150-250 words) — standard post</option>
+          <option value="long">Long (250-500 words) — essay-style</option>
+          <option value="any">Any — depends on topic</option>
+        </select>
+        <label>Emoji usage</label>
+        <select id="emoji">
+          <option value="none">None — professional only</option>
+          <option value="sparse">Sparse — 1-2 per post max</option>
+          <option value="moderate">Moderate — where natural</option>
+          <option value="heavy">Heavy — emojis are my thing</option>
+        </select>
+        <div class="btn-row">
+          <button class="secondary" onclick="prevStep()">← Back</button>
+          <button class="primary" onclick="nextStep()">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step" id="step-4">
+        <label>Posting preference</label>
+        <select id="frequency">
+          <option value="3">3 posts/week (Mon/Wed/Fri) — $800/mo</option>
+          <option value="5">5 posts/week (Mon-Fri) — $1,200/mo</option>
+          <option value="5plus">5 posts + DM outreach — $1,800/mo</option>
+          <option value="unsure">Not sure yet — contact me</option>
+        </select>
+        <label>What are your business goals for LinkedIn?</label>
+        <textarea id="goals" placeholder="e.g. Generate leads for my SaaS, build personal brand for speaking gigs, attract talent..." rows="2"></textarea>
+        <label>Who are you trying to reach?</label>
+        <textarea id="audience" placeholder="e.g. CTOs at Series A startups, agency owners, B2B founders..." rows="2"></textarea>
+        <label>Anything else we should know?</label>
+        <textarea id="notes" rows="2"></textarea>
+        <div class="btn-row">
+          <button class="secondary" onclick="prevStep()">← Back</button>
+          <button class="primary" onclick="submitForm()">Submit →</button>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:8px">
+        <span style="color:var(--muted);font-size:.82rem" id="step-counter">1 of 4</span>
+      </div>
+    </div>
+
+    <div class="success" id="success-view">
+      <h1>✅ Got it!</h1>
+      <p style="color:var(--muted);margin-top:8px">We'll build your voice profile and send a sample batch of posts within 48 hours. Watch your inbox.</p>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + n).classList.add('active');
+      document.getElementById('step-label').textContent = `Step ${n} of ${totalSteps}`;
+      document.getElementById('step-counter').textContent = `${n} of ${totalSteps}`;
+      document.getElementById('progress-bar').style.width = `${(n / totalSteps) * 100}%`;
+      currentStep = n;
+    }
+
+    function nextStep() { if (currentStep < totalSteps) showStep(currentStep + 1); }
+    function prevStep() { if (currentStep > 1) showStep(currentStep - 1); }
+
+    function submitForm() {
+      const data = {
+        name: document.getElementById('name').value,
+        linkedin: document.getElementById('linkedin').value,
+        headline: document.getElementById('headline').value,
+        industry: document.getElementById('industry').value,
+        topics: document.getElementById('topics').value,
+        hottake: document.getElementById('hottake').value,
+        dont: document.getElementById('dont').value,
+        style: document.getElementById('style').value,
+        length: document.getElementById('length').value,
+        emoji: document.getElementById('emoji').value,
+        frequency: document.getElementById('frequency').value,
+        goals: document.getElementById('goals').value,
+        audience: document.getElementById('audience').value,
+        notes: document.getElementById('notes').value,
+        submittedAt: new Date().toISOString()
+      };
+
+      const intakes = JSON.parse(localStorage.getItem('linkedin_intakes') || '[]');
+      intakes.push(data);
+      localStorage.setItem('linkedin_intakes', JSON.stringify(intakes));
+
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('success-view').style.display = '';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Scheduler — 451 Studios Tools</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #081018; --surface: #101926; --border: #223147;
+      --text: #edf3ff; --muted: #9fb0cb; --accent: #70a7ff;
+      --accent-2: #8b7dff; --green: #58d68d; --shadow: 0 14px 40px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(circle at top left, rgba(112,167,255,.14), transparent 26%), linear-gradient(180deg,#081018 0%,#0c1420 100%);
+      color: var(--text); line-height: 1.55;
+    }
+    .container { width: min(100% - 32px, 1180px); margin: 0 auto }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(10px); background: rgba(8,16,24,.78);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 12px }
+    .brand { font-weight: 800; letter-spacing: .05em }
+    .brand span { color: var(--accent) }
+    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: .94rem }
+    a.button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-weight: 600;
+      transition: .18s ease; cursor: pointer; font-size: .94rem; text-decoration: none;
+    }
+    a.button:hover { transform: translateY(-1px); border-color: var(--accent) }
+    a.button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none;
+      color: white; box-shadow: 0 10px 24px rgba(112,167,255,.22);
+    }
+    a.button.green {
+      background: linear-gradient(135deg, #58d68d, #2ecc71); border: none;
+      color: #081018; box-shadow: 0 10px 24px rgba(88,214,141,.22);
+    }
+    h1 { font-size: clamp(2.2rem,4vw,3.6rem); line-height: 1.05; margin-bottom: 16px; letter-spacing: -.03em }
+    h2 { font-size: 1.6rem; margin-bottom: 12px }
+    .hero { padding: 72px 0 40px; max-width: 760px }
+    .hero p { color: var(--muted); font-size: 1.05rem; margin-bottom: 20px; max-width: 680px }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;
+      border-radius: 999px; background: rgba(245,166,35,.1); color: #fdebb3;
+      border: 1px solid rgba(245,166,35,.18); font-size: .82rem; margin-bottom: 18px;
+    }
+    section { padding: 28px 0 }
+    .section-head { margin-bottom: 20px }
+    .section-head p { color: var(--muted); max-width: 640px }
+    .card {
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border); border-radius: 24px; padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px }
+    .feature-icon { font-size: 2rem; margin-bottom: 8px }
+    .feature-card h3 { margin-bottom: 6px; font-size: 1.05rem }
+    .feature-card p { color: var(--muted); font-size: .92rem; line-height: 1.45 }
+    .pricing-card {
+      text-align: center; padding: 32px 24px;
+      background: linear-gradient(180deg, rgba(21,33,50,.96), rgba(16,25,38,.96));
+      border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow);
+    }
+    .pricing-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(112,167,255,.12), rgba(139,125,255,.08));
+    }
+    .price { font-size: 2.4rem; font-weight: 800; margin: 12px 0 }
+    .price span { font-size: 1rem; color: var(--muted); font-weight: 400 }
+    .pricing-card ul { list-style: none; padding: 0; margin: 16px 0; text-align: left }
+    .pricing-card li { padding: 6px 0; color: var(--muted); font-size: .92rem }
+    .pricing-card li::before { content: "✓ "; color: var(--green) }
+    .cta {
+      margin: 28px 0 56px; padding: 28px; border-radius: 24px;
+      background: linear-gradient(135deg, rgba(112,167,255,.16), rgba(139,125,255,.12));
+      border: 1px solid rgba(112,167,255,.18); box-shadow: var(--shadow);
+      display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    footer { padding: 28px 0 48px; color: var(--muted); text-align: center; font-size: .9rem }
+    pre { white-space: pre-wrap; font-family: inherit }
+    .steps { display: grid; gap: 14px }
+    .step {
+      display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start;
+      padding: 16px; border-radius: 16px; background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .step-num {
+      width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-weight: 800;
+    }
+    @media (max-width: 980px) { .grid-2,.grid-3 { grid-template-columns: 1fr } .nav-links { display: none } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">451 <span>Studios</span></div>
+      <nav class="nav-links">
+        <a href="/tools/">All Tools</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+      <a class="button primary" href="social-scheduler-app.html">Open Dashboard</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow">📱 Marketing OS · Week 4</div>
+      <h1>Never wonder what to post again.</h1>
+      <p>Social Scheduler drafts, schedules, and previews auto-industry social content so you stay visible without the brain drain. Pick a service, pick a tone, generate — done.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a class="button primary" href="social-scheduler-app.html">Try the Dashboard →</a>
+        <a class="button" href="#pricing">See Pricing</a>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-head">
+        <h2>Generate posts in 10 seconds</h2>
+        <p>AI-written copy for 8 auto service types with calendar scheduling and image previews.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3>AI Copy Generation</h3>
+          <p>DeepSeek-powered copy for crash repair, detailing, PDR, towing, mobile mechanic, glass, vinyl, and inspections. Four tones: educational, promotional, behind-the-scenes, seasonal.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Calendar Scheduling</h3>
+          <p>Month-view calendar with scheduled post indicators. Drag-and-drop-friendly layout for planning your content cadence weeks ahead.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">🖼️</div>
+          <h3>Auto Image Previews</h3>
+          <p>Each post gets a branded 1080x1080 image with service icon and headline overlay. Download and post anywhere — Facebook, Instagram, Google.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Status Tracking</h3>
+          <p>Draft → Scheduled → Published. Filter by status, service type, or month. Never lose track of what's coming and what's done.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">✏️</div>
+          <h3>Full Manual Edit</h3>
+          <p>AI gives you a starting point. Tweak the headline, rewrite the body, swap hashtags — full control over every post before it goes live.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">🏷️</div>
+          <h3>Smart Hashtags</h3>
+          <p>Auto-generated hashtags tailored to each service type and tone. Local + industry tags included by default.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works">
+      <div class="section-head">
+        <h2>How it works</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div><strong>Pick a service &amp; tone</strong><br><span style="color:var(--muted);font-size:.92rem">Select from 8 auto service types and choose your vibe — educational, promotional, behind-the-scenes, or seasonal.</span></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div><strong>Generate your post</strong><br><span style="color:var(--muted);font-size:.92rem">AI writes the headline, body, CTA, and hashtags. A branded image preview renders automatically.</span></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div><strong>Review &amp; schedule</strong><br><span style="color:var(--muted);font-size:.92rem">Tweak anything. Set a publish date. Save as draft or schedule it. View your month at a glance.</span></div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div><strong>Post &amp; move on</strong><br><span style="color:var(--muted);font-size:.92rem">Download the image, copy the text, paste into Facebook/IG/Google. Mark as published when done.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="section-head">
+        <h2>Simple pricing</h2>
+      </div>
+      <div class="grid-2" style="max-width:700px;margin:0 auto">
+        <div class="pricing-card">
+          <h3>Social Scheduler</h3>
+          <div class="price">$12<span>/mo</span></div>
+          <ul>
+            <li>AI copy generation</li>
+            <li>Calendar scheduling</li>
+            <li>Image previews</li>
+            <li>Status tracking</li>
+            <li>8 service types</li>
+          </ul>
+          <a class="button primary" href="#" style="width:100%">Subscribe</a>
+        </div>
+        <div class="pricing-card featured">
+          <h3>Marketing OS Bundle</h3>
+          <div class="price">$29<span>/mo</span></div>
+          <ul>
+            <li>Review Request SMS</li>
+            <li>Auto-Publish Reviews</li>
+            <li>Ad Creative Generator</li>
+            <li>Social Scheduler</li>
+            <li>All future Marketing OS modules</li>
+          </ul>
+          <a class="button green" href="#" style="width:100%">Get the Bundle</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <div>
+        <strong style="font-size:1.15rem">Ready to schedule?</strong><br>
+        <span style="color:var(--muted)">No credit card. No commitment. Just a dashboard that works.</span>
+      </div>
+      <a class="button primary" href="social-scheduler-app.html">Open Dashboard →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">451 Studios — Tools for the modern auto shop</div>
+  </footer>
+</body>
+</html>

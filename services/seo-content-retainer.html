@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEO Content Retainer — 451 Studios</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0c10; --surface: #111318; --surface-2: #161a22; --border: #1f2433; --accent: #4f8ef7; --green: #2ecc71; --text: #e8edf5; --muted: #8892a8 }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55 }
+    .container { width: min(100% - 32px, 1100px); margin: 0 auto }
+    header { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: rgba(10,12,16,.8); border-bottom: 1px solid rgba(255,255,255,.06) }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 12px }
+    .brand { font-weight: 800; letter-spacing: .05em; text-decoration: none; color: var(--text) }
+    .brand span { color: var(--accent) }
+    a.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 600; transition: .18s; cursor: pointer; font-size: .94rem; text-decoration: none }
+    a.btn:hover { transform: translateY(-1px); border-color: var(--accent) }
+    a.btn.primary { background: linear-gradient(135deg, var(--accent), #6366f1); border: none; color: white; box-shadow: 0 10px 24px rgba(79,142,247,.22) }
+    a.btn.green { background: linear-gradient(135deg, #58d68d, #2ecc71); border: none; color: #0a0c10 }
+    .hero { padding: 64px 0 32px; max-width: 780px }
+    .hero h1 { font-size: clamp(2.2rem,4vw,3.4rem); line-height: 1.08; margin-bottom: 16px; letter-spacing: -.03em }
+    .hero p { color: var(--muted); font-size: 1.05rem; margin-bottom: 20px }
+    .hero .stats { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap }
+    .hero .stats .stat { font-size: .9rem; color: var(--muted) }
+    .hero .stats .stat strong { color: var(--text); font-size: 1.1rem; display: block }
+    section { padding: 28px 0 }
+    h2 { font-size: 1.4rem; margin-bottom: 16px }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px }
+    .card .icon { font-size: 1.6rem; margin-bottom: 8px }
+    .card h3 { font-size: 1rem; margin-bottom: 6px }
+    .card p { color: var(--muted); font-size: .88rem; line-height: 1.45 }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; max-width: 900px; margin: 0 auto }
+    .pricing-card { text-align: center; padding: 28px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px }
+    .pricing-card.featured { border-color: var(--accent); background: linear-gradient(135deg, rgba(79,142,247,.1), rgba(99,102,241,.06)) }
+    .pricing-card .price { font-size: 2.2rem; font-weight: 800; margin: 8px 0 }
+    .pricing-card .price span { font-size: .9rem; color: var(--muted); font-weight: 400 }
+    .pricing-card ul { list-style: none; padding: 0; margin: 16px 0; text-align: left }
+    .pricing-card li { padding: 5px 0; color: var(--muted); font-size: .85rem }
+    .pricing-card li::before { content: "✓ "; color: var(--green) }
+    .process { display: grid; gap: 12px; max-width: 700px }
+    .step { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; padding: 14px; border-radius: 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06) }
+    .step-num { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), #6366f1); font-weight: 700; font-size: .9rem }
+    .cta { margin: 28px 0 48px; padding: 28px; border-radius: 20px; background: linear-gradient(135deg, rgba(79,142,247,.14), rgba(99,102,241,.1)); border: 1px solid rgba(79,142,247,.16); display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap }
+    footer { padding: 28px 0 48px; color: var(--muted); text-align: center; font-size: .88rem }
+    @media (max-width: 860px) { .grid-3, .pricing-grid { grid-template-columns: 1fr } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="/">451 <span>Studios</span></a>
+      <a class="btn primary" href="#pricing">Get Started</a>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h1>Consistent SEO content your clients actually rank for.</h1>
+      <p>We research, write, and publish 2-4 SEO-optimized articles per week to your client's WordPress. Done-for-you content that drives organic traffic, backlinks, and leads. No managing freelancers, no writer's block, no missed deadlines.</p>
+      <div class="stats">
+        <div class="stat"><strong>2-8</strong> articles/week</div>
+        <div class="stat"><strong>$800</strong> starting/mo</div>
+        <div class="stat"><strong>48h</strong> turnaround</div>
+        <div class="stat"><strong>WordPress</strong> auto-publish</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <div class="process">
+        <div class="step"><div class="step-num">1</div><div><strong>Onboard</strong><br><span style="color:var(--muted);font-size:.88rem">We learn your client's brand voice, target keywords, and content goals. One intake call, then we're off.</span></div></div>
+        <div class="step"><div class="step-num">2</div><div><strong>Research &amp; outline</strong><br><span style="color:var(--muted);font-size:.88rem">We identify high-opportunity keywords, analyze competitors, and deliver article outlines for your approval.</span></div></div>
+        <div class="step"><div class="step-num">3</div><div><strong>Write &amp; optimize</strong><br><span style="color:var(--muted);font-size:.88rem">AI-assisted writing + human editorial pass. SEO-optimized headlines, meta descriptions, internal links, and image alt text.</span></div></div>
+        <div class="step"><div class="step-num">4</div><div><strong>Publish</strong><br><span style="color:var(--muted);font-size:.88rem">Auto-published to your client's WordPress via API. Featured image included. You review, we tweak.</span></div></div>
+        <div class="step"><div class="step-num">5</div><div><strong>Report</strong><br><span style="color:var(--muted);font-size:.88rem">Monthly performance report: impressions, clicks, rankings. Show your client the ROI.</span></div></div>
+      </div>
+    </section>
+
+    <section id="features">
+      <h2>Everything included</h2>
+      <div class="grid-3">
+        <div class="card"><div class="icon">🔍</div><h3>Keyword Research</h3><p>Competitor gap analysis, long-tail keyword opportunities, and search intent mapping for every article.</p></div>
+        <div class="card"><div class="icon">✍️</div><h3>AI-Assisted Writing</h3><p>DeepSeek-powered drafts with human editorial oversight. Fact-checked, readable, authoritative.</p></div>
+        <div class="card"><div class="icon">📸</div><h3>Featured Images</h3><p>AI-generated branded images for every article. Consistent visual identity across your entire blog.</p></div>
+        <div class="card"><div class="icon">⚡</div><h3>WordPress API Publishing</h3><p>Articles auto-publish directly to WordPress. Categories, tags, meta descriptions, featured image — all set.</p></div>
+        <div class="card"><div class="icon">📊</div><h3>Monthly Reports</h3><p>Search Console data compiled into a client-ready report. Impressions, CTR, average position, trending pages.</p></div>
+        <div class="card"><div class="icon">🔄</div><h3>One Revision Included</h3><p>Each article gets one revision round. Minor tweaks at no extra cost. Major rewrites priced per article.</p></div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2 style="text-align:center">Simple retainer pricing</h2>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Starter</h3>
+          <div class="price">$800<span>/mo</span></div>
+          <ul>
+            <li>2 articles per week (8/mo)</li>
+            <li>Keyword research</li>
+            <li>AI-generated featured images</li>
+            <li>WordPress auto-publish</li>
+            <li>Monthly performance report</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Get Started</a>
+        </div>
+        <div class="pricing-card featured">
+          <h3>Growth</h3>
+          <div class="price">$1,200<span>/mo</span></div>
+          <ul>
+            <li>4 articles per week (16/mo)</li>
+            <li>Everything in Starter</li>
+            <li>Competitor content audit</li>
+            <li>Content strategy insights</li>
+            <li>Priority support</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Get Started</a>
+        </div>
+        <div class="pricing-card">
+          <h3>Enterprise</h3>
+          <div class="price">$2,000<span>/mo</span></div>
+          <ul>
+            <li>8 articles per week (32/mo)</li>
+            <li>Everything in Growth</li>
+            <li>Dedicated content strategy</li>
+            <li>Topic cluster planning</li>
+            <li>Weekly strategy calls</li>
+          </ul>
+          <a class="btn primary" href="#" style="width:100%">Contact Us</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <div><strong style="font-size:1.1rem">Ready to dominate search?</strong><br><span style="color:var(--muted)">Book a 15-minute call. We'll audit your current content and show you the opportunity.</span></div>
+      <a class="btn green" href="#">Book a Call →</a>
+    </div>
+  </main>
+  <footer><div class="container">451 Studios — SEO Content Retainer Service</div></footer>
+</body>
+</html>
